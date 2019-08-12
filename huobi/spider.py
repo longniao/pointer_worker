@@ -32,8 +32,12 @@ async def huobi_spider():
         while True:
             data = await converse.receive()
             if data:
-                data = decode_ws_payload(data)
-                await huobi_parser(data)
+                try:
+                    data = decode_ws_payload(data)
+                    await huobi_parser(data)
+                except Exception as e:
+                    print(e, "decode failed.")
+
                 print('{time}-Client receive.'.format(time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
 
 

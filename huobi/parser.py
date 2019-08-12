@@ -32,22 +32,18 @@ async def huobi_parser(data):
         if trades:
             data_list = []
             for trade in trades:
-                try:
-                    if trade['ts'] > 9999999999:
-                        trade['ts'] = trade['ts'] / 1000
+                if trade['ts'] > 9999999999:
+                    trade['ts'] = trade['ts'] / 1000
 
-                    data = copy.deepcopy(trade_data)
-                    data['ex'] = 'huobi'
-                    data['pair'] = pair
-                    data['id'] = trade['id']
-                    data['time'] = trade['ts']
-                    data['price'] = trade['price']
-                    data['amount'] = trade['amount']
-                    data['type'] = trade['direction']
-                    data_list.append(data)
-                except Exception as e:
-                    print("error parse:", e)
-
+                data = copy.deepcopy(trade_data)
+                data['ex'] = 'huobi'
+                data['pair'] = pair
+                data['id'] = trade['id']
+                data['time'] = trade['ts']
+                data['price'] = trade['price']
+                data['amount'] = trade['amount']
+                data['type'] = trade['direction']
+                data_list.append(data)
             # print(data_list)
             await do_insert_many('trade', data_list)
 
