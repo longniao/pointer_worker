@@ -34,7 +34,7 @@ async def huobi_spider():
             if data:
                 data = decode_ws_payload(data)
                 await huobi_parser(data)
-            print('{time}-Client receive.'.format(time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+                print('{time}-Client receive.'.format(time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
 
 
 if __name__ == '__main__':

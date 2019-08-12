@@ -3,6 +3,7 @@
 import asyncio
 import pprint
 import motor.motor_asyncio
+import arrow
 
 client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
 
@@ -20,11 +21,21 @@ trade_data = dict(
     type='',
 )
 
+async def do_insert_many(collection, data_list):
+    datas = []
+    if data_list:
+        for data in data_list:
+            data['id'] = str(data['id'])
+            data['time'] = arrow.get(data['time']).datetime
+            datas.append(data)
 
-async def do_insert_many(collection, data):
-    result = await db[collection].insert_many(data)
-    print('inserted %d docs' % (len(result.inserted_ids),))
+        result = await db[collection].insert_many(datas)
+        print('inserted %d docs' % (len(result.inserted_ids),))
 
 async def do_insert_one(collection, data):
-    await db[collection].insert_one(data)
-    print('inserted one docs')
+    if data:
+        data['id'] = str(data['id'])
+        data['time'] = arrow.get(data['time']).datetime
+
+        await db[collection].insert_one(data)
+        print('inserted one docs')
