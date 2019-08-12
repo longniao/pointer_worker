@@ -45,7 +45,7 @@ async def huobi_parser(data):
                 data['type'] = trade['direction']
                 data_list.append(data)
             # print(data_list)
-            await do_insert_many('trade', data_list)
+            await do_insert_many(data_list)
 
     else:
         print('do nothing:', data)

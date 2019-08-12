@@ -9,7 +9,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
 
 db = client.flask_mongo
 
-collection = db.market
+collection = 'trade'
 
 trade_data = dict(
     ex='',
@@ -21,7 +21,7 @@ trade_data = dict(
     type='',
 )
 
-async def do_insert_many(collection, data_list):
+async def do_insert_many(data_list):
     datas = []
     if data_list:
         for data in data_list:
@@ -32,7 +32,7 @@ async def do_insert_many(collection, data_list):
         result = await db[collection].insert_many(datas)
         print('inserted %d docs' % (len(result.inserted_ids),))
 
-async def do_insert_one(collection, data):
+async def do_insert_one(data):
     if data:
         data['id'] = str(data['id'])
         data['time'] = arrow.get(data['time']).datetime

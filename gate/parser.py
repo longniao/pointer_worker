@@ -31,7 +31,7 @@ async def gate_parser(data):
                 data['type'] = trade['type']
                 data_list.append(data)
             # print(data_list)
-            await do_insert_many('trade', data_list)
+            await do_insert_many(data_list)
 
     elif data['method'] == 'depth.update':
         print('depth.update')
