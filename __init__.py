@@ -27,6 +27,8 @@ async def do_insert_many(data_list):
         for data in data_list:
             data['id'] = str(data['id'])
             data['time'] = arrow.get(data['time']).datetime
+            data['price'] = float(data['price'])
+            data['amount'] = float(data['amount'])
             datas.append(data)
 
         result = await db[collection].insert_many(datas)
