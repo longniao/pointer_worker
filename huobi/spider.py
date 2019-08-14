@@ -18,16 +18,26 @@ def encode_ws_payload(data):
     return json.dumps(data)
 
 async def huobi_spider():
+    '''
+    huobi spider
+    url: https://gateio.co/docs/futures/ws/index.html
+    :return:
+    '''
+
     uri = 'wss://api.huobi.pro/ws'
 
     async with AioWebSocket(uri) as aws:
         converse = aws.manipulator
 
         # 客户端给服务端发送消息
-        #await converse.send('{ "sub": "market.ethbtc.kline.1min", "id": "%s" }' % client_id)
-        #await converse.send('{ "sub": "market.btcusdt.depth.step1", "id": "%s" }' % client_id)
+        # 行情
+        await converse.send('{ "sub": "market.btcusdt.detail", "id": "%s" }' % client_id)
+        # 实时交易
         await converse.send('{ "sub": "market.btcusdt.trade.detail", "id": "%s" }' % client_id)
-        #await converse.send('{ "sub": "market.btcusdt.detail", "id": "%s" }' % client_id)
+        # 深度
+        #await converse.send('{ "sub": "market.btcusdt.depth.step1", "id": "%s" }' % client_id)
+        # 蜡烛图/K线
+        # await converse.send('{ "sub": "market.ethbtc.kline.1min", "id": "%s" }' % client_id)
 
         while True:
             data = await converse.receive()

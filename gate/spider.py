@@ -3,6 +3,8 @@
 import asyncio
 import logging
 import json
+import traceback
+import time
 from datetime import datetime
 from aiowebsocket.converses import AioWebSocket
 
@@ -13,6 +15,11 @@ def decode_ws_payload(data):
     return json.loads(data.decode('utf-8'))
 
 async def gate_spider():
+    '''
+    gate spider
+    url: https://gateio.co/docs/futures/ws/index.html
+    :return:
+    '''
     print('gate_spider: start')
     uri = 'wss://fx-ws.gateio.ws/v4/ws'
 
@@ -20,8 +27,8 @@ async def gate_spider():
         converse = aws.manipulator
 
         # 客户端给服务端发送消息
-        #
-        # await converse.send('{"time" : 123456, "channel" : "futures.tickers", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
+        # 行情
+        await converse.send('{"time" : 123456, "channel" : "futures.tickers", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
         # 实时交易
         await converse.send('{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
         # 深度
@@ -31,8 +38,9 @@ async def gate_spider():
 
         while True:
             data = await converse.receive()
-            data = decode_ws_payload(data)
-            await gate_parser(data)
+            if data:
+                data = decode_ws_payload(data)
+                await gate_parser(data)
             print('{time}-Client receive.'.format(time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
 
 
@@ -48,6 +56,7 @@ if __name__ == '__main__':
             break
         except Exception as e:
             count += 1
+            traceback.print_exc()
             print(e, "Try again %s times..." % count)
             continue
 

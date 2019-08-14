@@ -28,7 +28,7 @@ class Trade(object):
         new_data = copy.deepcopy(DEFAULT_DATA)
 
         new_data['ex'] = str(data['ex'])
-        new_data['contract'] = str(data['contract'])
+        new_data['contract'] = str(data['contract']).lower()
         new_data['id'] = str(data['id'])
         new_data['time'] = arrow.get(data['time']).datetime
         new_data['price'] = float(data['price'])

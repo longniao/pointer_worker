@@ -4,8 +4,8 @@ from ..db import do_insert_many
 from ..models.trade import Trade
 
 trade_pair = {
-    'btcusdt': 'btc_usdt',
-    'eosusdt': 'eos_usdt',
+    'btcusdt': 'btc_usd',
+    'eosusdt': 'eos_usd',
 }
 
 action_list = ['trade', 'depth']
