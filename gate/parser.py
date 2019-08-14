@@ -1,39 +1,49 @@
 # -*- coding: utf-8 -*-
 
-import copy
-from .. import trade_data
-from .. import do_insert_many, do_insert_one
+from ..db import do_insert_many
+from ..models.trade import Trade
+from ..models.ticker import Ticker
 
 async def gate_parser(data):
     '''
-    {"method": "depth.update", "params": [true, {"asks": [["11782.87", "0.05179279"], ["11782.9", "0.35"], ["11785.56", "0.2"], ["11785.57", "0.65"], ["11785.59", "0.41"]], "bids": [["11776", "0.0002"], ["11772.7", "0.0092"], ["11770.33", "0.43"], ["11767.53", "0.4254"], ["11767.05", "0.08221492"]]}, "BTC_USDT"], "id": null}
-    {"method": "trades.update", "params": ["BTC_USDT", [{"id": 185077997, "time": 1565346272.4163539, "price": "11782.9", "amount": "0.0424", "type": "buy"}]], "id": null}
+    {"time":1565775111,"channel":"futures.trades","event":"update","error":null,"result":[{"size":-1464,"id":5349902,"create_time":1565775111,"price":"10483","contract":"BTC_USD"},{"size":-2000,"id":5349903,"create_time":1565775111,"price":"10483","contract":"BTC_USD"}]}
+    {"time":1565775111,"channel":"futures.tickers","event":"update","error":null,"result":[{"contract":"BTC_USD","last":"10483","change_percentage":"-7.24","funding_rate":"0.000641","mark_price":"10474.95","index_price":"10469.51","total_size":"19461274","volume_24h":"99692397","quanto_base_rate":"","volume_24h_usd":"99692397","volume_24h_btc":"9522","funding_rate_indicative":"0.0001"}]}
     :return:
     '''
     print('gate_parser: start')
-    if 'method' not in data or 'params' not in data:
+    if 'channel' not in data or 'event' not in data or 'result' not in data:
         return False
 
-    if data['method'] == 'trades.update':
-        params = data['params']
-        pair = params[0].lower()
-        trades = params[1]
-        if trades:
-            data_list = []
-            for trade in trades:
-                data = copy.deepcopy(trade_data)
-                data['ex'] = 'gate'
-                data['pair'] = pair
-                data['id'] = trade['id']
-                data['time'] = trade['time']
-                data['price'] = trade['price']
-                data['amount'] = trade['amount']
-                data['type'] = trade['type']
-                data_list.append(data)
-            # print(data_list)
-            await do_insert_many(data_list)
+    if data['event'] == 'update' and not data['error']:
 
-    elif data['method'] == 'depth.update':
-        print('depth.update')
-    else:
-        print('do nothing:', data['params'])
+        timestamp = data['time']
+        result = data['result']
+        data_list = []
+
+        # 行情
+        if data['channel'] == 'futures.tickers':
+            if result:
+                for row in result:
+                    row['ex'] = 'gate'
+                    row['time'] = timestamp
+                    tmp = Ticker.format(row)
+                    data_list.append(tmp)
+
+                await do_insert_many(Ticker, data_list)
+
+        # 实时交易
+        elif data['channel'] == 'futures.trades':
+
+            if result:
+                for row in result:
+                    row['ex'] = 'gate'
+                    row['time'] = row['create_time']
+                    row['amount'] = row['size']
+                    row['type'] = ''
+                    tmp = Trade.format(row)
+                    data_list.append(tmp)
+
+                await do_insert_many(Trade, data_list)
+
+        else:
+            print('do nothing:', result)

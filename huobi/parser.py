@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import copy
-from .. import trade_data
-from .. import do_insert_many, do_insert_one
+from ..db import do_insert_many
+from ..models.trade import Trade
 
 trade_pair = {
     'btcusdt': 'btc_usdt',
@@ -35,17 +34,19 @@ async def huobi_parser(data):
                 if trade['ts'] > 9999999999:
                     trade['ts'] = trade['ts'] / 1000
 
-                data = copy.deepcopy(trade_data)
-                data['ex'] = 'huobi'
-                data['pair'] = pair
-                data['id'] = trade['id']
-                data['time'] = trade['ts']
-                data['price'] = trade['price']
-                data['amount'] = trade['amount']
-                data['type'] = trade['direction']
+                data = dict(
+                    ex='huobi',
+                    pair=pair,
+                    id=trade['id'],
+                    time=trade['ts'],
+                    price=trade['price'],
+                    amount=trade['amount'],
+                    type=trade['direction'],
+                )
+
                 data_list.append(data)
             # print(data_list)
-            await do_insert_many(data_list)
+            await do_insert_many(Trade, data_list)
 
     else:
         print('do nothing:', data)

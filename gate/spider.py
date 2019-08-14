@@ -6,7 +6,6 @@ import json
 from datetime import datetime
 from aiowebsocket.converses import AioWebSocket
 
-from pointer_spider.gate import client_id
 from pointer_spider.gate.parser import gate_parser
 
 
@@ -15,16 +14,20 @@ def decode_ws_payload(data):
 
 async def gate_spider():
     print('gate_spider: start')
-    uri = 'wss://ws.gateio.ws/v3/'
+    uri = 'wss://fx-ws.gateio.ws/v4/ws'
 
     async with AioWebSocket(uri) as aws:
         converse = aws.manipulator
 
         # 客户端给服务端发送消息
-        await converse.send('{"id":%s,"method":"server.ping","params":[]}' % client_id)
-        await converse.send('{"id":%s, "method":"server.time", "params":[]}' % client_id)
-        await converse.send('{"id":%s, "method":"trades.subscribe", "params":["BTC_USDT", "EOS_USDT"]}' % client_id)
-        #await converse.send('{"id":%s, "method":"depth.subscribe", "params":["BTC_USDT", 5, "0.0001"]}' % client_id)
+        #
+        # await converse.send('{"time" : 123456, "channel" : "futures.tickers", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
+        # 实时交易
+        await converse.send('{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
+        # 深度
+        # await converse.send('{"time" : 123456, "channel" : "futures.order_book", "event": "subscribe", "payload" : ["BTC_USD", "20", "0"]}')
+        # 蜡烛图
+        # await converse.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1m", "BTC_USD"]}')
 
         while True:
             data = await converse.receive()
