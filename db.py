@@ -28,29 +28,39 @@ async def do_insert_one(model, data):
     '''
     if data:
         await db[model.collection].insert_one(data)
-        print('inserted one %s' % model)
+        print('inserted one %s' % model.collection)
 
-async def do_query(model, data={}):
+async def do_find(model, data={}):
     '''
     查询
     :param model:
     :param data:
     :return:
     '''
-    await db[model.collection].find(data)
+    result = await db[model.collection].find(data)
+    print('query %s' % model.collection)
+    return result
 
-async def do_update(model, find={}, fields={}):
+async def do_find_one(model, filter):
+    '''
+    查询
+    :param model:
+    :param filter:
+    :return:
+    '''
+    result = await db[model.collection].find_one(filter)
+    print('find one %s' % model.collection)
+    return result
+
+async def do_update_one(model, filter, update):
     '''
     更新
     :param model:
-    :param find:
-    :param fields:
+    :param filter:
+    :param update:
     :return:
     '''
-    if not find:
-        print('find is empty')
-        return False
-
-    await db[model.collection].update(find, {
-        '$set': fields
+    print('update one %s' % model.collection, filter)
+    await db[model.collection].update_one(filter, {
+        '$set': update
     })

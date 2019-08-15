@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import arrow
 from ..db import *
 from ..models.trade import Trade
 from ..models.ticker import Ticker
@@ -66,17 +67,20 @@ async def gate_parser(data):
                     new_data = Kline.format(row)
 
                     # 检测，防止重复插入
-                    query_filter = {
+                    filter = {
                         'ex': row['ex'],
                         'contract': row['contract'],
                         'range': row['range'],
-                        'time': row['time'],
+                        'time': arrow.get(row['time']).datetime,
                     }
-                    result = await do_query(Kline, query_filter)
+                    result = await do_find_one(Kline, filter)
                     if not result:
                         await do_insert_one(Kline, new_data)
                     else:
-                        await do_update(Kline, query_filter, new_data)
+                        for k in filter.keys():
+                            del new_data[k]
+
+                        await do_update_one(Kline, filter, new_data)
 
         else:
             print('do nothing:', result)

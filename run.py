@@ -11,7 +11,6 @@ from pointer_spider.gate.spider import gate_spider
 from pointer_spider.huobi.spider import huobi_spider
 
 
-
 def get_argv():
     args = sys.argv[1:]
     if args == []:
@@ -54,6 +53,4 @@ if __name__ == '__main__':
             except Exception as e:
                 print(e, "Try again.")
                 continue
-
-
 
