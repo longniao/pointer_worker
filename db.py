@@ -30,7 +30,7 @@ async def do_insert_one(model, data):
         await db[model.collection].insert_one(data)
         print('inserted one %s' % model)
 
-async def query(model, data={}):
+async def do_query(model, data={}):
     '''
     查询
     :param model:
@@ -39,7 +39,7 @@ async def query(model, data={}):
     '''
     await db[model.collection].find(data)
 
-async def update(model, find={}, fields={}):
+async def do_update(model, find={}, fields={}):
     '''
     更新
     :param model:

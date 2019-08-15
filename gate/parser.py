@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ..db import do_insert_many
+from ..db import *
 from ..models.trade import Trade
 from ..models.ticker import Ticker
 from ..models.kline import Kline
@@ -63,10 +63,20 @@ async def gate_parser(data):
                     row['contract'] = contract_arr[1].lower()
                     row['range'] = contract_arr[0].lower()
 
-                    tmp = Kline.format(row)
-                    data_list.append(tmp)
+                    new_data = Kline.format(row)
 
-                await do_insert_many(Kline, data_list)
+                    # 检测，防止重复插入
+                    query_filter = {
+                        'ex': row['ex'],
+                        'contract': row['contract'],
+                        'range': row['range'],
+                        'time': row['time'],
+                    }
+                    result = await do_query(Kline, query_filter)
+                    if not result:
+                        await do_insert_one(Kline, new_data)
+                    else:
+                        await do_update(Kline, query_filter, new_data)
 
         else:
             print('do nothing:', result)
