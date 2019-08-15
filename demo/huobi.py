@@ -1,16 +1,29 @@
 # -*- coding: utf-8 -*-
 
+import json
+import gzip
 from ws4py.client.threadedclient import WebSocketClient
+
+client_id = '12312'
+
+def decode_ws_payload(data):
+    return json.loads(gzip.decompress(data).decode('utf-8'))
+
+def encode_ws_payload(data):
+    return json.dumps(data)
 
 class DummyClient(WebSocketClient):
     def opened(self):
-        self.send('{"time" : 123456, "channel" : "futures.tickers", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
-        self.send('{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
+        self.send('{ "sub": "market.ethbtc.kline.15min", "id": "%s" }' % client_id)
+        #self.send('{ "sub": "market.ethbtc.kline.60min", "id": "%s" }' % client_id)
+        self.send('{ "sub": "market.ethbtc.kline.4hour", "id": "%s" }' % client_id)
+        #self.send('{ "sub": "market.ethbtc.kline.1day", "id": "%s" }' % client_id)
 
     def closed(self, code, reason=None):
         print("Closed down", code, reason)
 
     def received_message(self, m):
+        m = decode_ws_payload(m)
         print(m)
 
 if __name__ == '__main__':
