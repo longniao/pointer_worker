@@ -29,3 +29,28 @@ async def do_insert_one(model, data):
     if data:
         await db[model.collection].insert_one(data)
         print('inserted one %s' % model)
+
+async def query(model, data={}):
+    '''
+    查询
+    :param model:
+    :param data:
+    :return:
+    '''
+    await db[model.collection].find(data)
+
+async def update(model, find={}, fields={}):
+    '''
+    更新
+    :param model:
+    :param find:
+    :param fields:
+    :return:
+    '''
+    if not find:
+        print('find is empty')
+        return False
+
+    await db[model.collection].update(find, {
+        '$set': fields
+    })

@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from ..db import do_insert_many
+from ..db import do_insert_many, do_insert_one
 from ..models.trade import Trade
+from ..models.ticker import Ticker
+from ..models.kline import Kline
 
-trade_pair = {
+contract_map = {
     'btcusdt': 'btc_usd',
     'eosusdt': 'eos_usd',
+}
+
+kline_range_map = {
+    '15min': '15m',
+    '60min': '1h',
+    '4hour': '4h',
+    '1day': '1d',
 }
 
 action_list = ['trade', 'depth']
@@ -20,14 +29,15 @@ async def huobi_parser(data):
         return False
 
     chs = data['ch'].split('.')
+
+    contract = contract_map.get(chs[1])
     action = chs[2]
-    pair = trade_pair.get(chs[1])
     if not pair:
         return False
 
-    if action in action_list:
-        tick = data['tick']
-        trades = tick['data']
+    # 实时交易
+    if action == 'trade':
+        trades = data['tick']['data']
         if trades:
             data_list = []
             for trade in trades:
@@ -36,7 +46,7 @@ async def huobi_parser(data):
 
                 data = dict(
                     ex='huobi',
-                    pair=pair,
+                    contract=contract,
                     id=trade['id'],
                     time=trade['ts'],
                     price=trade['price'],
@@ -47,6 +57,30 @@ async def huobi_parser(data):
                 data_list.append(data)
             # print(data_list)
             await do_insert_many(Trade, data_list)
+
+    # 深度
+    elif action == 'depth':
+        pass
+
+    # K线
+    elif action == 'kline':
+        range = kline_range_map.get(chs[3])
+        tick = data['tick']
+
+        data = dict(
+            ex='huobi',
+            contract=contract,
+            range=range,
+            time=tick['id'],
+            open=tick['open'],
+            close=tick['close'],
+            high=tick['high'],
+            low=tick['low'],
+            amount=tick['amount'],
+            count=tick['count'],
+            volume=tick['vol'],
+        )
+        await do_insert_one(Kline, data)
 
     else:
         print('do nothing:', data)

@@ -3,6 +3,7 @@
 from ..db import do_insert_many
 from ..models.trade import Trade
 from ..models.ticker import Ticker
+from ..models.kline import Kline
 
 async def gate_parser(data):
     '''
@@ -44,6 +45,28 @@ async def gate_parser(data):
                     data_list.append(tmp)
 
                 await do_insert_many(Trade, data_list)
+
+        # K线
+        elif data['channel'] == 'futures.candlesticks':
+
+            if result:
+                for row in result:
+                    row['ex'] = 'gate'
+                    row['time'] = row['t']
+                    row['open'] = row['o']
+                    row['close'] = row['c']
+                    row['high'] = row['h']
+                    row['low'] = row['l']
+                    row['volume'] = row['v']
+
+                    contract_arr = row['n'].split('_', 1)
+                    row['contract'] = contract_arr[1].lower()
+                    row['range'] = contract_arr[0].lower()
+
+                    tmp = Kline.format(row)
+                    data_list.append(tmp)
+
+                await do_insert_many(Kline, data_list)
 
         else:
             print('do nothing:', result)
