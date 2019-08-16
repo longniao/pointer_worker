@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
+from .parser import Parser
 import motor.motor_asyncio
 
-client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
+parser = Parser()
+parser.load(os.getenv('conf', './__conf/dev.conf'))
+client = motor.motor_asyncio.AsyncIOMotorClient(parser.config['mongodb']['db_url'])
 
 db = client.flask_mongo
 

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import arrow
-from ..db import *
-from ..models.trade import Trade
-from ..models.ticker import Ticker
+from pointer_spider.library.db import *
 from ..models.kline import Kline
+from ..models.trade import Trade
 
 contract_map = {
     'btcusdt': 'btc_usd',

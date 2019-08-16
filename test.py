@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import logging
 import asyncio
 
 sys.path.insert(0, '..')
+os.environ.setdefault('conf', './__conf/dev.conf')
 
 from pointer_spider.huobi.parser import huobi_parser
 
@@ -21,7 +23,7 @@ async def test_huobi():
 if __name__ == '__main__':
     try:
         print('start test...')
-        asyncio.get_event_loop().run_until_complete(test_huobi())
+        #asyncio.get_event_loop().run_until_complete(test_huobi())
     except KeyboardInterrupt as exc:
         print('KeyboardInterrupt')
         logging.info('Quit.')
