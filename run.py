@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import logging
 import asyncio
 import subprocess
 
 sys.path.insert(0, '..')
+os.environ.setdefault('conf', './__conf/dev.conf')
 
 from pointer_spider.gate.spider import gate_spider
 from pointer_spider.huobi.spider import huobi_spider
