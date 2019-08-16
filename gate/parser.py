@@ -68,10 +68,10 @@ async def gate_parser(data):
 
                     # 检测，防止重复插入
                     filter = {
-                        'ex': row['ex'],
-                        'contract': row['contract'],
-                        'range': row['range'],
-                        'time': arrow.get(row['time']).datetime,
+                        'ex': new_data['ex'],
+                        'contract': new_data['contract'],
+                        'range': new_data['range'],
+                        'time': new_data['time'],
                     }
                     result = await do_find_one(Kline, filter)
                     if not result:

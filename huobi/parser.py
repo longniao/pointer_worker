@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ..db import do_insert_many, do_insert_one
+import arrow
+from ..db import *
 from ..models.trade import Trade
 from ..models.ticker import Ticker
 from ..models.kline import Kline
@@ -32,7 +33,7 @@ async def huobi_parser(data):
 
     contract = contract_map.get(chs[1])
     action = chs[2]
-    if not pair:
+    if not contract:
         return False
 
     # 实时交易
@@ -80,7 +81,26 @@ async def huobi_parser(data):
             count=tick['count'],
             volume=tick['vol'],
         )
-        await do_insert_one(Kline, data)
+
+        new_data = Kline.format(data)
+
+        # 检测，防止重复插入
+        filter = {
+            'ex': new_data['ex'],
+            'contract': new_data['contract'],
+            'range': new_data['range'],
+            'time': new_data['time'],
+        }
+
+        result = await do_find_one(Kline, filter)
+
+        if not result:
+            await do_insert_one(Kline, new_data)
+        else:
+            for k in filter.keys():
+                del new_data[k]
+
+            await do_update_one(Kline, filter, new_data)
 
     else:
         print('do nothing:', data)

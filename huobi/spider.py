@@ -37,10 +37,10 @@ async def huobi_spider():
         # 深度
         # await converse.send('{ "sub": "market.btcusdt.depth.step1", "id": "%s" }' % client_id)
         # 蜡烛图/K线
-        await converse.send('{ "sub": "market.ethbtc.kline.15min", "id": "%s" }' % client_id)
-        await converse.send('{ "sub": "market.ethbtc.kline.60min", "id": "%s" }' % client_id)
-        await converse.send('{ "sub": "market.ethbtc.kline.4hour", "id": "%s" }' % client_id)
-        await converse.send('{ "sub": "market.ethbtc.kline.1day", "id": "%s" }' % client_id)
+        await converse.send('{ "sub": "market.btcusdt.kline.15min", "id": "%s" }' % client_id)
+        await converse.send('{ "sub": "market.btcusdt.kline.60min", "id": "%s" }' % client_id)
+        await converse.send('{ "sub": "market.btcusdt.kline.4hour", "id": "%s" }' % client_id)
+        await converse.send('{ "sub": "market.btcusdt.kline.1day", "id": "%s" }' % client_id)
 
         while True:
             data = await converse.receive()
