@@ -8,7 +8,7 @@ parser = Parser()
 parser.load(os.getenv('conf', './__conf/dev.conf'))
 client = motor.motor_asyncio.AsyncIOMotorClient(parser.config['mongodb']['db_url'])
 
-db = client[parser.config['mongodb']['pointer']]
+db = client[parser.config['mongodb']['db_name']]
 
 
 async def do_insert_many(model, data_list):
