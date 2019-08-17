@@ -47,7 +47,13 @@ async def huobi_spider():
             if data:
                 try:
                     data = decode_ws_payload(data)
-                    await huobi_parser(data)
+                    if 'ch' in data:
+                        await huobi_parser(data)
+                    elif 'ping' in data:
+                        print('pong:', data['ping'])
+                    else:
+                        print("continue", data)
+                        continue
                 except Exception as e:
                     print(e, "decode failed.")
                 except:
