@@ -52,7 +52,7 @@ if __name__ == '__main__':
     count = 0
     while True:
         try:
-            asyncio.get_event_loop().run_until_complete(spider())
+            asyncio.get_event_loop().run_until_complete(gate_spider())
             print('try')
         except KeyboardInterrupt as exc:
             print('KeyboardInterrupt')

@@ -58,7 +58,7 @@ if __name__ == '__main__':
     while True:
         try:
             print('start spider...')
-            asyncio.get_event_loop().run_until_complete(spider())
+            asyncio.get_event_loop().run_until_complete(huobi_spider())
         except KeyboardInterrupt as exc:
             print('KeyboardInterrupt')
             logging.info('Quit.')
