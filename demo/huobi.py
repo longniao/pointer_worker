@@ -23,9 +23,10 @@ class DummyClient(WebSocketClient):
         print("Closed down", code, reason)
 
     def received_message(self, m):
+        print(m)
         if m:
             m = decode_ws_payload(m)
-        print(m)
+        print('decoded:', m)
 
 if __name__ == '__main__':
     try:
