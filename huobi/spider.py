@@ -50,8 +50,10 @@ async def huobi_spider():
                     await huobi_parser(data)
                 except Exception as e:
                     print(e, "decode failed.")
+                except:
+                    print("decode failed.")
 
-                print('{time}-Client receive.'.format(time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+            print('{time}-Client receive.'.format(time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
 
 
 if __name__ == '__main__':
