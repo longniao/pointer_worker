@@ -3,3 +3,4 @@ ws4py
 motor
 aiowebsocket
 arrow
+pysocks
