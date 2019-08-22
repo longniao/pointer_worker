@@ -19,7 +19,7 @@ def get_argv():
         print(
 '''
 Usage:
-  python run.py <command>
+  python server.py <command>
 Commands:
   huobi   : huobi api
   gate    : gate api
