@@ -6,7 +6,6 @@ import logging
 import asyncio
 
 sys.path.insert(0, '..')
-os.environ.setdefault('conf', './__conf/dev.conf')
 
 from pointer_spider.huobi.parser import huobi_parser
 
