@@ -10,6 +10,7 @@ async def feixiaohao_parser(data):
     :return:
     '''
     print('feixiaohao_parser: start')
+    print(type(data))
     if data['code'] != 200:
         return False
 

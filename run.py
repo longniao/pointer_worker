@@ -10,6 +10,7 @@ sys.path.insert(0, '..')
 
 from pointer_spider.gate.spider import gate_spider
 from pointer_spider.huobi.spider import huobi_spider
+from pointer_spider.feixiaohao.spider import feixiaohao_spider
 
 
 def get_argv():
@@ -34,6 +35,8 @@ async def run_apider(spider=None):
         await huobi_spider()
     elif spider == 'gate':
         await gate_spider()
+    elif spider == 'feixiaohao':
+        await feixiaohao_spider()
 
 
 if __name__ == '__main__':
