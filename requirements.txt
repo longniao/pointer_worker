@@ -4,3 +4,4 @@ motor
 aiowebsocket
 arrow
 pysocks
+aiohttp
