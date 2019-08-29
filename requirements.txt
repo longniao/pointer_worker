@@ -5,3 +5,4 @@ aiowebsocket
 arrow
 pysocks
 aiohttp
+Flask-APScheduler
