@@ -34,5 +34,6 @@ def create_app(config_name):
     login_manager.init_app(app)
     csrf.init_app(app)
     scheduler.init_app(app)
+    scheduler.start()
 
     return app
