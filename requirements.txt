@@ -1,8 +1,3 @@
-asyncio
-ws4py
 motor
-aiowebsocket
 arrow
-pysocks
-aiohttp
 Flask-APScheduler
