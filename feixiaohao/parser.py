@@ -26,6 +26,7 @@ async def feixiaohao_parser(data):
             row['high'] = row['high']
             row['low'] = row['low']
             row['volume'] = row['vol']
+            row['amount'] = row['marketcap']
 
             new_data = Kline.format(row)
 
