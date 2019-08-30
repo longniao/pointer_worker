@@ -54,37 +54,19 @@ def add_fake_data(number_users):
 
 
 @manager.command
-def setup_dev():
+def setup_tasks():
     """Runs the set-up needed for local development."""
-    setup_general()
-
-
-@manager.command
-def setup_prod():
-    """Runs the set-up needed for production."""
-    setup_general()
-
-
-def setup_general():
-    """Runs the set-up needed for both local development and production.
-       Also sets up first admin user."""
-    Role.insert_roles()
-    role_admin = Role.objects(name='Administrator').first()
-    if role_admin is not None:
-        if User.objects(email=Config.ADMIN_EMAIL).first() is None:
-            user = User(
-                user_name='admin',
-                password_hash=generate_password_hash(Config.ADMIN_PASSWORD),
-                role_id=role_admin.pkid,
-                confirmed=True,
-                email=Config.ADMIN_EMAIL,
-                user_info=dict(
-                    first_name='Admin',
-                    last_name='Account',
-                )
-            )
-            user.save()
-            print('Added administrator {}'.format(user.to_json()))
+    '''
+    {
+        "id":"search_kline",
+        "args":[
+            "huobi",
+            "btcusdt",
+            "60min"
+            ]
+    }
+    '''
+    pass
 
 
 @manager.command

@@ -2,6 +2,7 @@
 
 import arrow
 from app.sdks.tushare_sdk import tushare_pro
+from app.models.market.kline import Kline
 
 
 def search_kline(exchange, symbol, freq):
@@ -17,9 +18,21 @@ def search_kline(exchange, symbol, freq):
     start_date = now.shift(days=-1).format('YYYYMMDD')
 
     print(exchange, symbol, freq, start_date, end_date)
-
     df = tushare_pro.coinbar(exchange=exchange, symbol=symbol, freq=freq, start_date=start_date, end_date=end_date)
-    return df
+    for index, row in df.iterrows():
+        data = dict(
+            ex=exchange,
+            contract=symbol,
+            freq=freq,
+            time=row['date'],
+            open=row['open'],
+            high=row['high'],
+            low=row['low'],
+            close=row['close'],
+            volume=row['vol'],
+        )
+        print(data)
+        Kline.insert_data(data)
 
-
+    return True
 

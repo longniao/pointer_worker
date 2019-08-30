@@ -9,7 +9,7 @@ ALL_JOBS = {
         'func': search_kline,
         'args': '',
         'trigger': 'interval',
-        'seconds': 5
+        'seconds': 10
     }
 }
 

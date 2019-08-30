@@ -22,14 +22,16 @@ class Kline(db.Document):
     ex = db.StringField(required=True)
     contract = db.StringField(required=True)
     open = db.FloatField(required=True)
-    close = db.FloatField(required=True)
     high = db.FloatField(required=True)
     low = db.FloatField(required=True)
+    close = db.FloatField(required=True)
     volume = db.FloatField(required=True)
-    count = db.FloatField(required=True)
-    amount = db.FloatField(required=True)
+    count = db.FloatField(required=True, default=0)
+    amount = db.FloatField(required=True, default=0)
     freq = db.StringField(required=True)
     time = db.DateTimeField(required=True)
+    ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
+    utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
     meta = {'collection': 'kline'}
 
