@@ -33,7 +33,7 @@ class Kline(db.Document):
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'collection': 'kline'}
+    meta = {'collection': 'kline', 'strict': False}
 
     def to_json(self, key=True):
         if key:
@@ -99,6 +99,7 @@ class Kline(db.Document):
 
         # 检测，防止重复插入
         kline = Kline.objects(ex=data['ex'], contract=data['contract'], freq=data['freq'], time=data['time']).first()
+
         if not kline:
             return Kline(**data).save()
         else:
@@ -110,4 +111,4 @@ class Kline(db.Document):
                 kline.low = data['low']
             if 'close' in data:
                 kline.close = data['close']
-            return kline.save()
+            return kline.update()

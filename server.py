@@ -57,6 +57,7 @@ def add_fake_data(number_users):
 def setup_tasks():
     """Runs the set-up needed for local development."""
     '''
+    # 10秒执行一次
     {
         "id":"search_kline",
         "args":[
@@ -64,6 +65,19 @@ def setup_tasks():
             "btcusdt",
             "60min"
             ]
+        'trigger': 'interval',
+        'seconds': 10
+    }
+    # 一次性执行
+    {
+        "id":"search_kline",
+        "args":[
+            "huobi",
+            "btcusdt",
+            "60min"
+            ],
+        "trigger":"date",
+        "run_date":"2019-08-30 19:06:40"
     }
     '''
     pass

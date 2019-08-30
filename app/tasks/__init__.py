@@ -8,8 +8,7 @@ ALL_JOBS = {
         'id': 'search_kline',
         'func': search_kline,
         'args': '',
-        'trigger': 'interval',
-        'seconds': 10
+        'trigger': 'interval'
     }
 }
 
