@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from .market.coinbar import search_coinbar
+from .market.kline import search_kline
 
 
 ALL_JOBS = {
-    'search_coinbar': {
-        'id': 'search_coinbar',
-        'func': search_coinbar,
+    'search_kline': {
+        'id': 'search_kline',
+        'func': search_kline,
         'args': '',
         'trigger': 'interval',
-        'seconds': 2
+        'seconds': 5
     }
 }
 
