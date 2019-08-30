@@ -7,7 +7,7 @@ import traceback
 import tushare as ts
 from datetime import datetime
 
-from pointer_spider.tushare.parser import tushare_parser
+from pointer_worker.tushare.parser import tushare_parser
 
 ts.set_token('0a4672439efefb2a6cf2940cce35055e6a3f0e7d381af939768f4e9d')
 pro = ts.pro_api()

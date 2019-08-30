@@ -8,9 +8,9 @@ import subprocess
 
 sys.path.insert(0, '..')
 
-from pointer_spider.gate.spider import gate_spider
-from pointer_spider.huobi.spider import huobi_spider
-from pointer_spider.feixiaohao.spider import feixiaohao_spider
+from pointer_worker.gate.spider import gate_spider
+from pointer_worker.huobi.spider import huobi_spider
+from pointer_worker.feixiaohao.spider import feixiaohao_spider
 
 
 def get_argv():

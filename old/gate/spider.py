@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 from aiowebsocket.converses import AioWebSocket
 
-from pointer_spider.gate.parser import gate_parser
+from pointer_worker.gate.parser import gate_parser
 
 
 def decode_ws_payload(data):

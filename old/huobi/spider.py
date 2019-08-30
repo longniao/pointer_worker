@@ -7,8 +7,8 @@ import gzip
 from datetime import datetime
 from aiowebsocket.converses import AioWebSocket
 
-from pointer_spider.huobi import client_id
-from pointer_spider.huobi.parser import huobi_parser
+from pointer_worker.huobi import client_id
+from pointer_worker.huobi.parser import huobi_parser
 
 
 def decode_ws_payload(data):

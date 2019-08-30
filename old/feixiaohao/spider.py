@@ -7,7 +7,7 @@ import aiohttp
 import traceback
 from datetime import datetime
 
-from pointer_spider.feixiaohao.parser import feixiaohao_parser
+from pointer_worker.feixiaohao.parser import feixiaohao_parser
 
 
 async def fetch(session, url):

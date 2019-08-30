@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pointer_spider.db import *
+from pointer_worker.db import *
 from ..models.kline import Kline
 from ..models.trade import Trade
 
