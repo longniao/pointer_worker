@@ -6,11 +6,9 @@ from flask_apscheduler import APScheduler
 from flask_babel import lazy_gettext as _
 from flask_login import LoginManager
 from flask_mongoengine import MongoEngine
-from flask_wtf.csrf import CSRFProtect
 
 # 全局变量
 db = MongoEngine()
-csrf = CSRFProtect()
 scheduler = APScheduler()
 
 # Set up Flask-Login
@@ -32,8 +30,10 @@ def create_app(config_name):
     # Set up extensions
     db.init_app(app)
     login_manager.init_app(app)
-    csrf.init_app(app)
     scheduler.init_app(app)
     scheduler.start()
+
+    from app.routers import main_blueprint
+    app.register_blueprint(main_blueprint)
 
     return app

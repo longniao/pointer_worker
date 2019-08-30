@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
 
+import json
 from flask import (
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
+    jsonify,
+    request
 )
 
-from app.models.account import User
-from . import job_blueprint
+from . import main_blueprint
 
 
-@job_blueprint.route('/login', methods=['GET','POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.objects(email=form.email.data).first()
-        if user is not None and user.password_hash is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember_me.data)
-            flash(_('You are now logged in. Welcome back!'), 'success')
-            return redirect(request.args.get('next') or url_for('main.index'))
-        else:
-            flash(_('Invalid email or password.'), 'form-error')
-    return render_template('auth/login.html', form=form)
+@main_blueprint.route('/job_list', methods=['GET'])
+def job_list():
+    data = json.loads(request.get_data(as_text=True))
+    for key, value in data.items():
+        if value == '':
+            data[key] = 0
+    for key, value in data.items():
+        if type(value) == str and value != 'i':
+            data[key] = float(value)
+
+    return jsonify(data)

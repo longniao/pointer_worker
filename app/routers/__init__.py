@@ -2,11 +2,14 @@
 
 from flask import Blueprint
 
-job_blueprint = Blueprint('job', __name__, url_prefix='/')
+main_blueprint = Blueprint('main', __name__)
 
+base_response = dict(
+    code=1,
+    msg='success',
+    data=[],
+)
 
-from .login import *
-from .logout import *
-from .register import *
-from .reset_password import *
+from .add_job import *
+
 
