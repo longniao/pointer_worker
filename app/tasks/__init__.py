@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .market.kline import search_kline
+from .spider.kline import search_kline
 
 
 ALL_JOBS = {
