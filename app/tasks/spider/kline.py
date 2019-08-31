@@ -31,7 +31,7 @@ def search_kline(exchange, symbol, freq):
             close=row['close'],
             volume=row['vol'],
         )
-        print(data)
+        # print(data)
         Kline.insert_data(data)
 
     return True

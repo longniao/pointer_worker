@@ -104,14 +104,15 @@ class Kline(db.Document):
             return Kline(**data).save()
         else:
             update_data = dict()
-            if 'open' in data:
+            if 'open' in data and data['open'] != kline.open:
                 update_data['open'] = data['open']
-            if 'high' in data:
+            if 'high' in data and data['high'] != kline.high:
                 update_data['high'] = data['high']
-            if 'low' in data:
+            if 'low' in data and data['low'] != kline.low:
                 update_data['low'] = data['low']
-            if 'close' in data:
+            if 'close' in data and data['close'] != kline.close:
                 update_data['close'] = data['close']
             if update_data:
+                print('kline update:', kline._id, update_data)
                 Kline.objects(_id=kline._id).update(**update_data)
             return True
