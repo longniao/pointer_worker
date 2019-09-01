@@ -4,65 +4,57 @@ import arrow
 from app import db
 
 
-class Kline(db.Document):
+class Capital(db.Document):
     '''
-    ex: str 交易所
-    contract: str 交易对
-    open: float 开盘价
-    high: float 最高价
-    low: float 最低价
-    close: float 收盘价
-    volume: float 成交量
-    count: int 成交笔数（默认不展示，有些交易所没有此项数据，若需要请在fields里添加）
-    amount: float 成交额 (默认不展示,需在fields里添加上，有些交易所没有此项数据)
-    freq: str 行情频率
-    time: datetime 行情时间
+    coin	str	货币代码
+    name	str	货币名称
+    marketcap	str	市值（美元）
+    price	float	当前时间价格（美元）
+    vol24	float	24小时成交额（美元）
+    supply	float	流通总量
+    date	str	交易日期
+    ctime	datetime	数据采集时间
     '''
     _id = db.StringField()
-    ex = db.StringField(required=True)
-    contract = db.StringField(required=True)
-    open = db.FloatField(required=True)
-    high = db.FloatField(required=True)
-    low = db.FloatField(required=True)
-    close = db.FloatField(required=True)
-    volume = db.FloatField(required=True)
-    count = db.FloatField(required=True, default=0)
-    amount = db.FloatField(required=True, default=0)
-    freq = db.StringField(required=True)
-    time = db.DateTimeField(required=True)
+    coin = db.StringField(required=True)
+    name = db.StringField(required=True)
+    marketcap = db.StringField(required=True)
+    price = db.FloatField(required=True)
+    vol24 = db.FloatField(required=True)
+    supply = db.FloatField(required=True)
+    date = db.DateTimeField(required=True)
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'collection': 'kline', 'strict': False}
+    meta = {'collection': 'capital', 'strict': False}
 
     def to_json(self, key=True):
         if key:
             return {
-                "ex": self.ex.upper(),
-                "contract": self.contract.upper(),
-                "open": self.open,
-                "high": self.high,
-                "low": self.low,
-                "close": self.close,
-                "volume": self.volume,
-                "range": self.range,
-                "time": arrow.get(self.time).float_timestamp,
+                "coin": self.coin.upper(),
+                "name": self.name,
+                "marketcap": self.marketcap,
+                "price": self.price,
+                "vol24": self.vol24,
+                "supply": self.supply,
+                "date": self.date,
+                "ctime": arrow.get(self.ctime).float_timestamp,
             }
         else:
             return [
-                arrow.get(self.time).float_timestamp,
-                self.open,
-                self.high,
-                self.low,
-                self.close,
-                self.volume,
+                arrow.get(self.date).float_timestamp,
+                self.name,
+                self.marketcap,
+                self.price,
+                self.vol24,
+                self.supply,
             ]
 
     def __repr__(self):
-        return '<Trade ex:\'%s\', contract:\'%s\'>' % (self.ex, self.contract)
+        return '<Trade name:\'%s\', marketcap:\'%s\'>' % (self.name, self.marketcap)
 
     @staticmethod
-    def get_within(ex=None, contract=None, freq=None, hour=None, key=True):
+    def get_within(coin=None, hour=None, key=True):
         '''
         获取时间区间内的数据
         :param ex:
