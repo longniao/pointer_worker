@@ -5,7 +5,7 @@ from kits.parser.conf import ConfParser
 
 basedir = os.path.dirname(__file__)
 
-config_file = os.getenv('CONFIG_FILE', '../pointer_conf/dev/spider.conf')
+config_file = os.getenv('CONFIG_FILE', '../pointer_conf/dev/worker.conf')
 parser = ConfParser()
 parser.load(config_file)
 
