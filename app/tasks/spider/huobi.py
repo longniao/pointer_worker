@@ -1,31 +1,22 @@
 # -*- coding: utf-8 -*-
 
-import time
 import arrow
 from ws4py.client.threadedclient import WebSocketClient
 from app.libs.util import decode_ws_payload
 from app.models.market.kline import Kline
 
-GATE_CONTRACT_DICT = {
+HUOBI_CONTRACT_DICT = {
     'BTC_USD': 'btc_usdt',
 }
 
-class GateClient(WebSocketClient):
+class HuobiClient(WebSocketClient):
     def opened(self):
-        t = int(time.time())
-        # 客户端给服务端发送消息
-        # 行情
-        # self.send('{"time" : %s, "channel" : "futures.tickers", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}' % t)
-        # 实时交易
-        # self.send('{"time" : %s, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}' % t)
-        # 深度
-        # self.send('{"time" : %s, "channel" : "futures.order_book", "event": "subscribe", "payload" : ["BTC_USD", "20", "0"]}' % t)
-        # 蜡烛图/K线
-        # self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["10s", "BTC_USD"]}' % t)
-        self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["15m", "BTC_USD"]}' % t)
-        self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1h", "BTC_USD"]}' % t)
-        self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["4h", "BTC_USD"]}' % t)
-        self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1d", "BTC_USD"]}' % t)
+        #self.send('{"time" : 123456, "channel" : "futures.tickers", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
+        #self.send('{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
+        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["15m", "BTC_USD"]}')
+        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1h", "BTC_USD"]}')
+        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["4h", "BTC_USD"]}')
+        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1d", "BTC_USD"]}')
 
     def closed(self, code, reason=None):
         print("Closed down", code, reason)
@@ -76,15 +67,15 @@ class GateClient(WebSocketClient):
                 print('do nothing:', result)
 
 
-def collect_gate():
+def collect_huobi():
     '''
-    gate spider
-    url: https://gateio.co/docs/futures/ws/index.html
+    huobi spider
+    url: https://huobiapi.github.io/docs/spot/v1/cn/
     :return:
     '''
     try:
-        remote = 'wss://fx-ws.gateio.ws/v4/ws'
-        ws = GateClient(remote, protocols=['chat'])
+        remote = 'wss://api.huobi.pro/ws'
+        ws = HuobiClient(remote, protocols=['chat'])
         ws.connect()
         ws.run_forever()
     except KeyboardInterrupt:
@@ -94,8 +85,8 @@ def collect_gate():
 
 if __name__ == '__main__':
     try:
-        remote = 'wss://fx-ws.gateio.ws/v4/ws'
-        ws = GateClient(remote, protocols=['chat'])
+        remote = 'wss://api.huobi.pro/ws'
+        ws = HuobiClient(remote, protocols=['chat'])
         ws.connect()
         ws.run_forever()
     except KeyboardInterrupt:
