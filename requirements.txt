@@ -1,3 +1,5 @@
 motor
 arrow
 Flask-APScheduler
+tushare
+lxml
