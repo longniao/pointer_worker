@@ -5,12 +5,9 @@ from ws4py.client.threadedclient import WebSocketClient
 from app.libs.util import decode_ws_payload
 from app.models.market.kline import Kline
 
-HUOBI_CONTRACT_DICT = {
-    'btcusdt': 'btc_usdt',
-    'eosusdt': 'eos_usdt',
-}
+client_id = '12312'
 
-contract_map = {
+HUOBI_CONTRACT_DICT = {
     'btcusdt': 'btc_usdt',
     'eosusdt': 'eos_usdt',
 }
