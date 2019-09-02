@@ -19,10 +19,10 @@ class Capital(db.Document):
     coin = db.StringField(required=True)
     name = db.StringField(required=True)
     marketcap = db.StringField(required=True)
-    price = db.FloatField(required=True)
-    vol24 = db.FloatField(required=True)
-    supply = db.FloatField(required=True)
-    date = db.DateTimeField(required=True)
+    price = db.FloatField(required=True, default=0)
+    vol24 = db.FloatField(required=True, default=0)
+    supply = db.FloatField(required=True, default=0)
+    time = db.DateTimeField(required=True)
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
@@ -37,12 +37,12 @@ class Capital(db.Document):
                 "price": self.price,
                 "vol24": self.vol24,
                 "supply": self.supply,
-                "date": self.date,
+                "time": self.time,
                 "ctime": arrow.get(self.ctime).float_timestamp,
             }
         else:
             return [
-                arrow.get(self.date).float_timestamp,
+                arrow.get(self.time).float_timestamp,
                 self.name,
                 self.marketcap,
                 self.price,
@@ -54,27 +54,29 @@ class Capital(db.Document):
         return '<Trade name:\'%s\', marketcap:\'%s\'>' % (self.name, self.marketcap)
 
     @staticmethod
-    def get_within(coin=None, hour=None, key=True):
+    def get_within(coin=None, date=None, start_time=None, end_time=None, key=True):
         '''
         获取时间区间内的数据
-        :param ex:
-        :param contract:
-        :param freq:
-        :param hour:
+        :param coin:
+        :param date:
+        :param start_time:
+        :param end_time:
         :param key:
         :return:
         '''
-        query = Kline.objects
-        if ex:
-            query = query.filter(ex=ex)
-        if contract:
-            query = query.filter(contract=contract)
+        query = Capital.objects
+        if coin:
+            query = query.filter(coin=coin)
+        if date:
+            query = query.filter(date=date)
         if freq:
             query = query.filter(freq=freq)
-        if hour:
-            now = arrow.now()
-            start_time = now.shift(hours=-hour)
-            query = query.filter(time__gte=start_time.datetime)
+        if start_time:
+            start_time = arrow.get(start_time).datetime
+            query = query.filter(time__gte=start_time)
+        if end_time:
+            end_time = arrow.get(end_time).datetime
+            query = query.filter(time__lt=end_time)
 
         data_list = query.order_by("time").all()
         result = []
@@ -86,25 +88,30 @@ class Capital(db.Document):
 
     @staticmethod
     def insert_data(data):
-        if 'ex' not in data or 'contract' not in data or 'freq' not in data or 'time' not in data:
+        if 'coin' not in data or 'marketcap' not in data or 'time' not in data:
             raise Exception('params missed')
 
         # 检测，防止重复插入
-        kline = Kline.objects(ex=data['ex'], contract=data['contract'], freq=data['freq'], time=data['time']).first()
+        capital = Capital.objects(coin=data['coin'], marketcap=data['marketcap'], time=data['time']).first()
 
-        if not kline:
-            return Kline(**data).save()
+        if not capital:
+            return Capital(**data).save()
         else:
-            update_data = dict()
-            if 'open' in data and data['open'] != kline.open:
-                update_data['open'] = data['open']
-            if 'high' in data and data['high'] != kline.high:
-                update_data['high'] = data['high']
-            if 'low' in data and data['low'] != kline.low:
-                update_data['low'] = data['low']
-            if 'close' in data and data['close'] != kline.close:
-                update_data['close'] = data['close']
-            if update_data:
-                print('kline update:', kline._id, update_data)
-                Kline.objects(_id=kline._id).update_one(**update_data)
+            # 只更新当天的，过去的数据不用改变，所以不用更新
+            new_time = arrow.get(data['time']).datetime
+            old_time = arrow.get(capital.time).datetime
+            if new_time == old_time:
+                update_data = dict()
+                if 'marketcap' in data and data['marketcap'] != capital.marketcap:
+                    update_data['marketcap'] = data['marketcap']
+                if 'price' in data and data['price'] != capital.price:
+                    update_data['price'] = data['price']
+                if 'vol24' in data and data['vol24'] != capital.vol24:
+                    update_data['vol24'] = data['vol24']
+                if 'supply' in data and data['supply'] != capital.supply:
+                    update_data['supply'] = data['supply']
+                if update_data:
+                    print('Capital update:', capital._id, update_data)
+                    update_data['utime'] = arrow.utcnow().datetime
+                    Capital.objects(_id=capital._id).update_one(**update_data)
             return True

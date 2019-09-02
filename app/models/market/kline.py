@@ -47,6 +47,7 @@ class Kline(db.Document):
                 "volume": self.volume,
                 "range": self.range,
                 "time": arrow.get(self.time).float_timestamp,
+                "ctime": arrow.get(self.ctime).float_timestamp,
             }
         else:
             return [
@@ -62,13 +63,14 @@ class Kline(db.Document):
         return '<Trade ex:\'%s\', contract:\'%s\'>' % (self.ex, self.contract)
 
     @staticmethod
-    def get_within(ex=None, contract=None, freq=None, hour=None, key=True):
+    def get_within(ex=None, contract=None, freq=None, start_time=None, end_time=None, key=True):
         '''
         获取时间区间内的数据
         :param ex:
         :param contract:
         :param freq:
-        :param hour:
+        :param start_time:
+        :param end_time:
         :param key:
         :return:
         '''
@@ -79,10 +81,12 @@ class Kline(db.Document):
             query = query.filter(contract=contract)
         if freq:
             query = query.filter(freq=freq)
-        if hour:
-            now = arrow.now()
-            start_time = now.shift(hours=-hour)
-            query = query.filter(time__gte=start_time.datetime)
+        if start_time:
+            start_time = arrow.get(start_time).datetime
+            query = query.filter(time__gte=start_time)
+        if end_time:
+            end_time = arrow.get(end_time).datetime
+            query = query.filter(time__lt=end_time)
 
         data_list = query.order_by("time").all()
         result = []
@@ -103,16 +107,21 @@ class Kline(db.Document):
         if not kline:
             return Kline(**data).save()
         else:
-            update_data = dict()
-            if 'open' in data and data['open'] != kline.open:
-                update_data['open'] = data['open']
-            if 'high' in data and data['high'] != kline.high:
-                update_data['high'] = data['high']
-            if 'low' in data and data['low'] != kline.low:
-                update_data['low'] = data['low']
-            if 'close' in data and data['close'] != kline.close:
-                update_data['close'] = data['close']
-            if update_data:
-                print('kline update:', kline._id, update_data)
-                Kline.objects(_id=kline._id).update_one(**update_data)
+            # 只更新当天的，过去的数据不用改变，所以不用更新
+            new_time = arrow.get(data['time']).datetime
+            old_time = arrow.get(kline.time).datetime
+            if new_time == old_time:
+                update_data = dict()
+                if 'open' in data and data['open'] != kline.open:
+                    update_data['open'] = data['open']
+                if 'high' in data and data['high'] != kline.high:
+                    update_data['high'] = data['high']
+                if 'low' in data and data['low'] != kline.low:
+                    update_data['low'] = data['low']
+                if 'close' in data and data['close'] != kline.close:
+                    update_data['close'] = data['close']
+                if update_data:
+                    print('kline update:', kline._id, update_data)
+                    update_data['utime'] = arrow.utcnow().datetime
+                    Kline.objects(_id=kline._id).update_one(**update_data)
             return True

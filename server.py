@@ -59,18 +59,18 @@ def setup_tasks():
     '''
     # 10秒执行一次
     {
-        "id":"search_kline",
+        "id":"collect_kline",
         "args":[
             "huobi",
             "btcusdt",
             "60min"
-            ]
-        'trigger': 'interval',
-        'seconds': 10
+            ],
+        "trigger": "interval",
+        "seconds": 10
     }
     # 一次性执行
     {
-        "id":"search_kline",
+        "id":"collect_kline",
         "args":[
             "huobi",
             "btcusdt",

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 from ws4py.client.threadedclient import WebSocketClient
 
 class DummyClient(WebSocketClient):
@@ -15,7 +16,13 @@ class DummyClient(WebSocketClient):
         print("Closed down", code, reason)
 
     def received_message(self, m):
-        print(m)
+        if m.is_text:
+            recvStr = m.data.decode("utf-8")
+            print(type(recvStr), recvStr)
+            message = json.loads(recvStr)
+            print(type(message), message)
+        else:
+            print(type(m), m)
 
 if __name__ == '__main__':
     try:
