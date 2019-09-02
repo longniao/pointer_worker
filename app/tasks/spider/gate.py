@@ -31,8 +31,13 @@ class GateClient(WebSocketClient):
         print("Closed down", code, reason)
 
     def received_message(self, message):
-        message = decode_ws_payload(message)
-        self.parser_data(message)
+        try:
+            message = decode_ws_payload(message)
+            self.parser_data(message)
+        except Exception as e:
+            print(e, "parse failed.")
+        except:
+            print("parse failed.")
 
     def parser_data(self, data):
         '''

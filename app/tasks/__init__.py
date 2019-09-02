@@ -2,6 +2,7 @@
 
 from .spider.tushare import collect_tushare_kline, collect_tushare_capital
 from .spider.gate import collect_gate
+from .spider.huobi import collect_huobi
 
 
 ALL_JOBS = {
@@ -20,6 +21,12 @@ ALL_JOBS = {
     'collect_gate': {
         'id': 'collect_gate',
         'func': collect_gate,
+        'args': '',
+        'trigger': 'interval'
+    },
+    'collect_huobi': {
+        'id': 'collect_huobi',
+        'func': collect_huobi,
         'args': '',
         'trigger': 'interval'
     },

@@ -6,65 +6,120 @@ from app.libs.util import decode_ws_payload
 from app.models.market.kline import Kline
 
 HUOBI_CONTRACT_DICT = {
-    'BTC_USD': 'btc_usdt',
+    'btcusdt': 'btc_usdt',
+    'eosusdt': 'eos_usdt',
 }
+
+contract_map = {
+    'btcusdt': 'btc_usdt',
+    'eosusdt': 'eos_usdt',
+}
+
+HUOBI_FREQ_DICT = {
+    '15min': '15m',
+    '60min': '1h',
+    '4hour': '4h',
+    '1day': '1d',
+}
+
 
 class HuobiClient(WebSocketClient):
     def opened(self):
-        #self.send('{"time" : 123456, "channel" : "futures.tickers", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
-        #self.send('{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USD","EOS_USD"]}')
-        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["15m", "BTC_USD"]}')
-        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1h", "BTC_USD"]}')
-        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["4h", "BTC_USD"]}')
-        self.send('{"time" : 123456, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1d", "BTC_USD"]}')
+        # 客户端给服务端发送消息
+        # self.send('{"pong": %s}' % mseconds)
+        # 行情
+        # self.send('{ "sub": "market.btcusdt.detail", "id": "%s" }' % client_id)
+        # 实时交易
+        # self.send('{ "sub": "market.btcusdt.trade.detail", "id": "%s" }' % client_id)
+        # 深度
+        # self.send('{ "sub": "market.btcusdt.depth.step1", "id": "%s" }' % client_id)
+        # 蜡烛图/K线
+        self.send('{ "sub": "market.btcusdt.kline.15min", "id": "%s" }' % client_id)
+        self.send('{ "sub": "market.btcusdt.kline.60min", "id": "%s" }' % client_id)
+        self.send('{ "sub": "market.btcusdt.kline.4hour", "id": "%s" }' % client_id)
+        self.send('{ "sub": "market.btcusdt.kline.1day", "id": "%s" }' % client_id)
 
     def closed(self, code, reason=None):
         print("Closed down", code, reason)
 
     def received_message(self, message):
-        message = decode_ws_payload(message)
-        self.parser_data(message)
+        try:
+            data = decode_ws_payload(m)
+            if 'ch' in data:
+                self.parser_data(data)
+            elif 'ping' in data:
+                self.send('{"pong": %s}' % data['ping'])
+            else:
+                print("continue", data)
+        except Exception as e:
+            print(e, "parse failed.")
+        except:
+            print("parse failed.")
 
     def parser_data(self, data):
         '''
-        {"time":1565775111,"channel":"futures.trades","event":"update","error":null,"result":[{"size":-1464,"id":5349902,"create_time":1565775111,"price":"10483","contract":"BTC_USD"},{"size":-2000,"id":5349903,"create_time":1565775111,"price":"10483","contract":"BTC_USD"}]}
-        {"time":1565775111,"channel":"futures.tickers","event":"update","error":null,"result":[{"contract":"BTC_USD","last":"10483","change_percentage":"-7.24","funding_rate":"0.000641","mark_price":"10474.95","index_price":"10469.51","total_size":"19461274","volume_24h":"99692397","quanto_base_rate":"","volume_24h_usd":"99692397","volume_24h_btc":"9522","funding_rate_indicative":"0.0001"}]}
+        {'ch': 'market.btcusdt.trade.detail', 'ts': 1565367413854, 'tick': {'id': 102028992266, 'ts': 1565367413799, 'data': [{'id': 10202899226643868708445, 'ts': 1565367413799, 'amount': 0.002074, 'price': 11799.9, 'direction': 'sell'}]}}
         :return:
         '''
-        print('gate parser: start')
-        if 'channel' not in data or 'event' not in data or 'result' not in data:
+        print('huobi parser: start')
+        if 'ch' not in data or 'tick' not in data:
             return False
 
-        if data['event'] == 'update' and not data['error']:
+        chs = data['ch'].split('.')
 
-            timestamp = data['time']
-            result = data['result']
+        contract = HUOBI_CONTRACT_DICT.get(chs[1])
+        action = chs[2]
+        if not contract:
+            return False
 
-            # K线
-            if data['channel'] == 'futures.candlesticks':
+        # 实时交易
+        if action == 'trade':
+            trades = data['tick']['data']
+            if trades:
+                data_list = []
+                for trade in trades:
+                    if trade['ts'] > 9999999999:
+                        trade['ts'] = trade['ts'] / 1000
 
-                if result:
-                    for row in result:
-                        contract_arr = row['n'].split('_', 1)
-                        contract = GATE_CONTRACT_DICT.get(contract_arr[1])
-                        freq = contract_arr[0].lower()
+                    data = dict(
+                        ex='huobi',
+                        contract=contract,
+                        id=trade['id'],
+                        time=trade['ts'],
+                        price=trade['price'],
+                        amount=trade['amount'],
+                        type=trade['direction'],
+                    )
 
-                        # 入库
-                        data = dict(
-                            ex='gate',
-                            contract=contract,
-                            freq=freq,
-                            time=arrow.get(row['t']).datetime,
-                            open=row['o'],
-                            high=row['h'],
-                            low=row['l'],
-                            close=row['c'],
-                            volume=row['v'],
-                        )
-                        Kline.insert_data(data)
+                    print(data)
 
-            else:
-                print('do nothing:', result)
+        # 深度
+        elif action == 'depth':
+            pass
+
+        # K线
+        elif action == 'kline':
+            freq = HUOBI_FREQ_DICT.get(chs[3])
+            row = data['tick']
+
+            # 入库
+            data = dict(
+                ex='huobi',
+                contract=contract,
+                freq=freq,
+                time=arrow.get(row['id']).datetime,
+                open=row['open'],
+                high=row['high'],
+                low=row['low'],
+                close=row['close'],
+                count=row['count'],
+                amount=row['amount'],
+                volume=row['vol'],
+            )
+            Kline.insert_data(data)
+
+        else:
+            print('do nothing:', data)
 
 
 def collect_huobi():
