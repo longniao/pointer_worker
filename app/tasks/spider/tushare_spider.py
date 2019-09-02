@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import arrow
-from app.sdks.tushare_sdk import tushare_pro
+import tushare
 from app.models.market.kline import Kline
 from app.models.market.capital import Capital
 
+token = '0a4672439efefb2a6cf2940cce35055e6a3f0e7d381af939768f4e9d'
+tushare.set_token(token)
+tushare_pro = tushare.pro_api()
 
 def collect_tushare_kline(exchange, symbol, freq):
     '''

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from .spider.tushare import collect_tushare_kline, collect_tushare_capital
-from .spider.gate import collect_gate
-from .spider.huobi import collect_huobi
+from .spider.tushare_spider import collect_tushare_kline, collect_tushare_capital
+from .spider.gate_spider import collect_gate
+from .spider.huobi_spider import collect_huobi
 
 
 ALL_JOBS = {
