@@ -45,7 +45,7 @@ class FeixiaohaoClient(object):
                     close=row['closeprice'],
                     volume=row['vol'],
                 )
-                # print(data)
+                print(data)
                 Kline.insert_data(data)
 
         else:
