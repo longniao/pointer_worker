@@ -119,7 +119,7 @@ class HuobiClient(WebSocketClient):
             print('do nothing:', data)
 
 
-def collect_huobi():
+def collect():
     '''
     huobi spider
     url: https://huobiapi.github.io/docs/spot/v1/cn/

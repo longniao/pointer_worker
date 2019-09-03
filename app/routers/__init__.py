@@ -10,6 +10,13 @@ base_response = dict(
     data=[],
 )
 
-from .add_job import *
+default_job = dict(
+    id='',
+    func='',
+    args=dict(),
+    trigger='',
+)
 
+from .add_job import *
+from .job_list import *
 

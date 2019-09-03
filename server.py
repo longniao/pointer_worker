@@ -59,14 +59,10 @@ def setup_tasks():
     '''
     # 10秒执行一次
     {
-        "id":"collect_kline",
-        "args":[
-            "huobi",
-            "btcusdt",
-            "60min"
-            ],
+        "func":"spider.gate_spider.collect",
+        "args":[],
         "trigger": "interval",
-        "seconds": 10
+        "seconds": 15
     }
     # 一次性执行
     {
@@ -80,7 +76,20 @@ def setup_tasks():
         "run_date":"2019-08-30 19:06:40"
     }
     '''
-    pass
+    default_jobs = [
+        {
+            "id":"collect_gate",
+            "args":[],
+            "trigger": "interval",
+            "minutes": 5
+        },
+        {
+            "id": "collect_huobi",
+            "args": [],
+            "trigger": "interval",
+            "minutes": 5
+        },
+    ]
 
 
 @manager.command

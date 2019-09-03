@@ -81,7 +81,7 @@ class GateClient(WebSocketClient):
                 print('do nothing:', result)
 
 
-def collect_gate():
+def collect():
     '''
     gate spider
     url: https://gateio.co/docs/futures/ws/index.html

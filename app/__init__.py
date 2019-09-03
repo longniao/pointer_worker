@@ -2,12 +2,14 @@
 
 from config import config
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from flask_apscheduler import APScheduler
 from flask_babel import lazy_gettext as _
 from flask_login import LoginManager
 from flask_mongoengine import MongoEngine
 
 # 全局变量
+csrf = CSRFProtect()
 db = MongoEngine()
 scheduler = APScheduler()
 
@@ -28,6 +30,7 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     # Set up extensions
+    # csrf.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     scheduler.init_app(app)

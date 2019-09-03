@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+from apscheduler.jobstores.mongodb import MongoDBJobStore
+from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 from kits.parser.conf import ConfParser
 
 basedir = os.path.dirname(__file__)
@@ -19,6 +21,19 @@ class Config:
     APP_NAME        = parser.config['app']['app_name']
     SECRET_KEY      = parser.config['app']['secret_key']
     WTF_CSRF_ENABLED    = parser.config['app']['wtf_csrf_enabled']
+
+    # APScheduler
+    JOBS = []
+    JSON_AS_ASCII = True # 支持json显示中文
+    SCHEDULER_API_ENABLED = parser.config['scheduler']['api_enabled']
+    SCHEDULER_JOBSTORES = {
+        'default': MongoDBJobStore(**parser.config['scheduler']['jobstore_default'])
+    }
+    SCHEDULER_EXECUTORS = {
+        'default': ThreadPoolExecutor(20),
+        'processpool': ProcessPoolExecutor(5)
+    }
+    SCHEDULER_JOB_DEFAULTS = parser.config['scheduler']['job_defaults']
 
     # mongodb settings
     MONGODB_SETTINGS = parser.config['mongodb']['mongodb_settings']

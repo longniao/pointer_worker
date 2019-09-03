@@ -9,7 +9,7 @@ token = '0a4672439efefb2a6cf2940cce35055e6a3f0e7d381af939768f4e9d'
 tushare.set_token(token)
 tushare_pro = tushare.pro_api()
 
-def collect_tushare_kline(exchange, symbol, freq):
+def collect_kline(exchange, symbol, freq):
     '''
     获取数字货币行情数据，目前支持币币交易和期货合约交易。如果是币币交易，exchange参数请输入huobi,okex,binance,bitfinex等。如果是期货，exchange参数请输入future_xxx，比如future_okex，future_bitmex。
     :param exchange:
@@ -41,7 +41,7 @@ def collect_tushare_kline(exchange, symbol, freq):
     return True
 
 
-def collect_tushare_capital(date=None):
+def collect_capital(date=None):
     '''
     数字货币每日市值
     获取数字货币每日市值数据，该接口每隔6小时采集一次数据，所以当日每个品种可能有多条数据，用户可根据实际情况过滤截取使用。

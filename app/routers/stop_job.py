@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from flask import (
+    current_app,
     jsonify
 )
 
-from app.models.scheduler.job import Job
 from . import main_blueprint, base_response
 
 
-@main_blueprint.route('/job_list', methods=['GET'])
-def job_list():
+@main_blueprint.route('/stop_job', methods=['POST'])
+def stop_job():
     response = base_response.copy()
 
-    response['data'] = Job.get_list()
+    current_app.apscheduler.stop()
 
     return jsonify(response)
