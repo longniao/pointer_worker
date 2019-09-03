@@ -137,9 +137,6 @@ def collect():
 
 if __name__ == '__main__':
     try:
-        remote = 'wss://api.huobi.pro/ws'
-        ws = HuobiClient(remote, protocols=['chat'])
-        ws.connect()
-        ws.run_forever()
+        collect()
     except KeyboardInterrupt:
-        ws.close()
+        print('KeyboardInterrupt')

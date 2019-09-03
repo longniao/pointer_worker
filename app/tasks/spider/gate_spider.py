@@ -99,9 +99,6 @@ def collect():
 
 if __name__ == '__main__':
     try:
-        remote = 'wss://fx-ws.gateio.ws/v4/ws'
-        ws = GateClient(remote, protocols=['chat'])
-        ws.connect()
-        ws.run_forever()
+        collect()
     except KeyboardInterrupt:
-        ws.close()
+        print('KeyboardInterrupt')
