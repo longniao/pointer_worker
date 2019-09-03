@@ -3,3 +3,5 @@ arrow
 Flask-APScheduler
 tushare
 lxml
+pandas
+bs4
