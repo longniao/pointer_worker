@@ -17,6 +17,13 @@ def resume_job():
     if 'id' not in post_data or not post_data['id']:
         current_app.apscheduler.resume()
     else:
+        # 检测任务
+        job = current_app.apscheduler.get_job(post_data['id'])
+        if not job:
+            response['code'] = 0
+            response['msg'] = 'job not found'
+            return jsonify(response)
+
         current_app.apscheduler.resume_job(post_data['id'])
 
     return jsonify(response)

@@ -19,4 +19,9 @@ default_job = dict(
 
 from .add_job import *
 from .job_list import *
+from .pause_job import *
+from .remove_job import *
+from .resume_job import *
+from .start_job import *
+from .stop_job import *
 
