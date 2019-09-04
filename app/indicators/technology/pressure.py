@@ -15,6 +15,7 @@
 # limitations under the License.
 """
 Pressure Indicators
+压力型
 @author Tab
 """
 from ..base import *

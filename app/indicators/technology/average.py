@@ -16,7 +16,7 @@
 
 """
 Moving Average
-均线
+均线型
 @author Tab
 """
 from ..base import *

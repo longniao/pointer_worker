@@ -434,3 +434,52 @@ def JLHB(df, N=7, M=5):
     # return pd.DataFrame({
     #     'B': B, 'VAR2': VAR2, 'JLHB': JLHB
     # })
+
+
+def TD(df):
+    """
+    TD 序列指标
+    :param df:
+    :return:
+    """
+    condv = (df['volume'] > 0)
+    cond1 = (df['close'] > df['close'].shift(4))
+    cond2 = (df['close'] < df['close'].shift(4))
+
+    df['cond_tdb_a'] = (df.groupby((((cond1)[condv])).cumsum()).cumcount() % 10 == 0).cumsum()
+    df['cond_tds_a'] = (df.groupby((((cond2)[condv])).cumsum()).cumcount() % 10 == 0).cumsum()
+    df['cond_tdb_b'] = (df.groupby((((cond1)[condv])).cumsum()).cumcount() % 10 != 0).cumsum()
+    df['cond_tds_b'] = (df.groupby((((cond2)[condv])).cumsum()).cumcount() % 10 != 0).cumsum()
+
+    df['tdb_a'] = df.groupby(
+
+        df['cond_tdb_a']
+
+    ).cumcount()
+    df['tds_a'] = df.groupby(
+
+        df['cond_tds_a']
+
+    ).cumcount()
+
+    df['tdb_b'] = df.groupby(
+
+        df['cond_tdb_b']
+
+    ).cumcount()
+    df['tds_b'] = df.groupby(
+
+        df['cond_tds_b']
+
+    ).cumcount()
+
+    df['tdc'] = df['tds_a'] - df['tdb_a']
+    df['tdc'] = df.apply((lambda x: x['tdb_b'] % 9 if x['tdb_b'] > 9 else x['tdc']), axis=1)
+    df['tdc'] = df.apply((lambda x: (x['tds_b'] % 9) * -1 if x['tds_b'] > 9 else x['tdc']), axis=1)
+
+    return pd.DataFrame(index=df.index, data={
+        'TD_count': df['tdc']
+    })
+
+
+
