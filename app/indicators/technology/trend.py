@@ -438,7 +438,7 @@ def JLHB(df, N=7, M=5):
 
 def TD(df):
     """
-    TD 序列指标
+    TD序列指标
     :param df:
     :return:
     """

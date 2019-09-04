@@ -16,7 +16,7 @@
 
 """
 Route
-路径
+路径型
 @author Tab
 """
 from ..base import *

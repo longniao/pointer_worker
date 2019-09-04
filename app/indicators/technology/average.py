@@ -204,7 +204,7 @@ def ALLIGAT(df, M1=13, M2=8, M3=5):
 
 def EXPMEMA(df, P1=5, P2=10, P3=20, P4=60):
     """
-    指数平滑移动平均
+    指数平滑移动平均线
     :param df:
     :param P1:
     :param P2:
