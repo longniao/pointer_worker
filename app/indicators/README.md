@@ -11,6 +11,7 @@ pip install indicator
 - https://www.tradingview.com/symbols/BTCUSD/technicals/
 - https://github.com/haibeicode/indicator
 - https://github.com/txjohnny5/Tom-Demark-Indicator/blob/master/TD_plotter.py
+- https://github.com/zhuyifei1999/guppy3
 
 ### 量化分析师的Python日记
 
