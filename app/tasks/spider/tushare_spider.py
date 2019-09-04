@@ -41,18 +41,20 @@ def collect_kline(exchange, symbol, freq):
     return True
 
 
-def collect_capital(date=None):
+def collect_btc_marketcap(start_date=None, end_date=None):
     '''
     数字货币每日市值
-    获取数字货币每日市值数据，该接口每隔6小时采集一次数据，所以当日每个品种可能有多条数据，用户可根据实际情况过滤截取使用。
+    :param start_date:
+    :param end_date:
     :return:
     '''
-    if not date:
-        date = arrow.now().shift(days=-1).format('YYYYMMDD')
+    if not end_date:
+        end_date = arrow.now().format('YYYYMMDD')
+    if not start_date:
+        start_date = arrow.now().shift(days=-7).format('YYYYMMDD')
 
-    print(date)
-    df = tushare_pro.coincap(trade_date=date)
-    print(df)
+    df = tushare_pro.btc_marketcap(start_date=start_date, end_date=end_date)
+
     for index, row in df.iterrows():
         data = dict(
             coin=row['coin'],

@@ -1,4 +1,10 @@
-motor
+Flask==0.12
+Flask-WTF
+gunicorn==19.6.0
+flask-mongoengine
+flask_restful
+ws4py
+flask-socketio
 arrow
 Flask-APScheduler
 tushare
