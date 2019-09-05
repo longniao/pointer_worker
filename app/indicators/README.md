@@ -8,6 +8,7 @@ pip install indicator
 ### 指标代码
 
 - https://github.com/freqtrade/technical
+- https://github.com/freqtrade/technical/blob/master/technical/indicators.py
 - https://www.tradingview.com/symbols/BTCUSD/technicals/
 - https://github.com/haibeicode/indicator
 - https://github.com/txjohnny5/Tom-Demark-Indicator/blob/master/TD_plotter.py
