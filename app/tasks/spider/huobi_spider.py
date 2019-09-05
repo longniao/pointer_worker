@@ -17,6 +17,7 @@ HUOBI_FREQ_DICT = {
     '60min': '1h',
     '4hour': '4h',
     '1day': '1d',
+    '1week': '7d',
 }
 
 
@@ -35,6 +36,7 @@ class HuobiClient(WebSocketClient):
         self.send('{ "sub": "market.btcusdt.kline.60min", "id": "%s" }' % client_id)
         self.send('{ "sub": "market.btcusdt.kline.4hour", "id": "%s" }' % client_id)
         self.send('{ "sub": "market.btcusdt.kline.1day", "id": "%s" }' % client_id)
+        self.send('{ "sub": "market.btcusdt.kline.1week", "id": "%s" }' % client_id)
 
     def closed(self, code, reason=None):
         print("Closed down", code, reason)

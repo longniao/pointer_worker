@@ -26,6 +26,7 @@ class GateClient(WebSocketClient):
         self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1h", "BTC_USD"]}' % t)
         self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["4h", "BTC_USD"]}' % t)
         self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["1d", "BTC_USD"]}' % t)
+        self.send('{"time" : %s, "channel" : "futures.candlesticks", "event": "subscribe", "payload" : ["7d", "BTC_USD"]}' % t)
 
     def closed(self, code, reason=None):
         print("Closed down", code, reason)
