@@ -47,6 +47,12 @@ def collect_btc_marketcap(start_date=None, end_date=None):
     :param start_date:
     :param end_date:
     :return:
+    {
+        "func":"spider.tushare_spider.collect_btc_marketcap",
+        "args": ["20190820"],
+        "trigger": "date",
+        "run_date":"2019-09-04 11:51:40"
+    }
     '''
     if not end_date:
         end_date = arrow.now().format('YYYYMMDD')

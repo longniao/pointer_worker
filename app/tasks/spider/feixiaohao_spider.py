@@ -52,13 +52,19 @@ class FeixiaohaoClient(object):
             print('do nothing:', result)
 
 
-def collect(start, end):
+def collect(start_year, end_year):
     '''
     feixiaohao spider
     :return:
+    {
+        "func":"spider.feixiaohao_spider.collect",
+        "args": [2013, 2020],
+        "trigger": "date",
+        "run_date":"2019-09-06 14:01:40"
+    }
     '''
     client = FeixiaohaoClient()
-    for year in range(start, end):
+    for year in range(start_year, end_year):
         begintime = '%s0101' % year
         endtime = '%s0101' % (year + 1)
         print(begintime, endtime)
