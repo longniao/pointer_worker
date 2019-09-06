@@ -98,6 +98,11 @@ class Kline(db.Document):
 
     @staticmethod
     def insert_data(data):
+        '''
+        新增数据
+        :param data:
+        :return:
+        '''
         if 'ex' not in data or 'contract' not in data or 'freq' not in data or 'time' not in data:
             raise Exception('params missed')
 
