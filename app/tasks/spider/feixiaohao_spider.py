@@ -9,7 +9,18 @@ from app.models.market.kline import Kline
 
 class FeixiaohaoClient(object):
 
-    def get_data(self, url):
+    def start(self, start_date, end_date):
+        '''
+        开始抓取
+        :param start_date:
+        :param end_date:
+        :return:
+        '''
+        url = 'https://dncapi.bqiapp.com/api/v3/coin/history?coincode=bitcoin&begintime=%s&endtime=%s&page=1&per_page=1000&webp=1' % (
+            start_date, end_date)
+        return self.crawl_data(url)
+
+    def crawl_data(self, url):
         try:
             request = Request(url)
             lines = urlopen(request, timeout=10).read()
@@ -45,31 +56,49 @@ class FeixiaohaoClient(object):
                     close=row['closeprice'],
                     volume=row['vol'],
                 )
-                print(data)
+                # print(data)
                 Kline.insert_data(data)
 
         else:
             print('do nothing:', result)
 
 
-def collect(start_year, end_year):
+def collect(start_date=None, end_date=None):
     '''
     feixiaohao spider
     :return:
     {
         "func":"spider.feixiaohao_spider.collect",
-        "args": [2013, 2020],
+        "args": ["20130101", "20200101"],
         "trigger": "date",
-        "run_date":"2019-09-06 14:01:40"
+        "run_date":"2019-09-06 15:39:40"
     }
     '''
+    if not end_date:
+        end_date = arrow.now().format('YYYYMMDD')
+    if not start_date:
+        start_date = arrow.now().shift(days=-7).format('YYYYMMDD')
+
     client = FeixiaohaoClient()
-    for year in range(start_year, end_year):
-        begintime = '%s0101' % year
-        endtime = '%s0101' % (year + 1)
+    start_time = arrow.get(str(start_date), 'YYYYMMDD')
+    end_time = arrow.get(str(end_date), 'YYYYMMDD')
+
+    while start_time.year < end_time.year:
+        start_time_span = start_time.span("year")
+
+        begintime = start_time_span[0].format('YYYYMMDD')
+        endtime = start_time_span[1].format('YYYYMMDD')
         print(begintime, endtime)
-        url = 'https://dncapi.bqiapp.com/api/v3/coin/history?coincode=bitcoin&begintime=%s&endtime=%s&page=1&per_page=1000&webp=1' % (begintime, endtime)
-        client.get_data(url)
+        client.start(begintime, endtime)
+
+        # 开始时间增加一年
+        start_time = start_time.shift(years=1)
+
+    # 抓取当年的数据
+    begintime = start_time.format('YYYYMMDD')
+    endtime = end_time.format('YYYYMMDD')
+    print(begintime, endtime)
+    client.start(begintime, endtime)
 
 
 if __name__ == '__main__':
