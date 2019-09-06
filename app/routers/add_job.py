@@ -29,8 +29,9 @@ def add_job():
     func_method = path_array[-1:][0]
     func_module = importlib.import_module(func_path)
 
-    job['id']   = full_path
     job['func'] = getattr(func_module, func_method)
+    if 'id' not in job:
+        job['id'] = full_path
     print(job)
 
     current_app.apscheduler.add_job(**job)
