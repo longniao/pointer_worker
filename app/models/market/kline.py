@@ -93,7 +93,10 @@ class Kline(db.Document):
             end_time = arrow.get(end_time).datetime
             query = query.filter(time__lt=end_time)
 
-        data_list = query.order_by("time").all()
+        data_list = query.order_by("time").find()
+        if limit:
+            data_list = data_list[:limit]
+
         result = []
         if data_list:
             for data in data_list:

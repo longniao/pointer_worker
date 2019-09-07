@@ -58,7 +58,7 @@ class HuobiClient(WebSocketClient):
         try:
             data = decode_ws_payload(m)
             if 'ch' in data:
-                self.parser_data(data)
+                self.parse_data(data)
             elif 'ping' in data:
                 self.send('{"pong": %s}' % data['ping'])
             else:
@@ -71,7 +71,7 @@ class HuobiClient(WebSocketClient):
         except:
             print("decode failed.")
 
-    def parser_data(self, data):
+    def parse_data(self, data):
         '''
         {'ch': 'market.btcusdt.trade.detail', 'ts': 1565367413854, 'tick': {'id': 102028992266, 'ts': 1565367413799, 'data': [{'id': 10202899226643868708445, 'ts': 1565367413799, 'amount': 0.002074, 'price': 11799.9, 'direction': 'sell'}]}}
         :return:

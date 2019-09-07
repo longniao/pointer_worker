@@ -34,13 +34,13 @@ class GateClient(WebSocketClient):
     def received_message(self, message):
         try:
             message = decode_ws_payload(message)
-            self.parser_data(message)
+            self.parse_data(message)
         except Exception as e:
             print(e, "parse failed.")
         except:
             print("parse failed.")
 
-    def parser_data(self, data):
+    def parse_data(self, data):
         '''
         {"time":1565775111,"channel":"futures.trades","event":"update","error":null,"result":[{"size":-1464,"id":5349902,"create_time":1565775111,"price":"10483","contract":"BTC_USD"},{"size":-2000,"id":5349903,"create_time":1565775111,"price":"10483","contract":"BTC_USD"}]}
         {"time":1565775111,"channel":"futures.tickers","event":"update","error":null,"result":[{"contract":"BTC_USD","last":"10483","change_percentage":"-7.24","funding_rate":"0.000641","mark_price":"10474.95","index_price":"10469.51","total_size":"19461274","volume_24h":"99692397","quanto_base_rate":"","volume_24h_usd":"99692397","volume_24h_btc":"9522","funding_rate_indicative":"0.0001"}]}
