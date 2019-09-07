@@ -2,6 +2,7 @@
 
 import arrow
 from app import db
+from . import ALL_CONTRACTS
 
 
 class Kline(db.Document):
@@ -63,7 +64,7 @@ class Kline(db.Document):
         return '<Trade ex:\'%s\', contract:\'%s\'>' % (self.ex, self.contract)
 
     @staticmethod
-    def get_within(ex=None, contract=None, freq=None, start_time=None, end_time=None, key=True):
+    def get_within(ex=None, contract=None, freq=None, start_time=None, end_time=None, limit=None, key=True):
         '''
         获取时间区间内的数据
         :param ex:
@@ -71,9 +72,13 @@ class Kline(db.Document):
         :param freq:
         :param start_time:
         :param end_time:
+        :param limit:
         :param key:
         :return:
         '''
+        if contract not in ALL_CONTRACTS:
+            raise Exception('error contract')
+
         query = Kline.objects
         if ex:
             query = query.filter(ex=ex)
@@ -105,6 +110,8 @@ class Kline(db.Document):
         '''
         if 'ex' not in data or 'contract' not in data or 'freq' not in data or 'time' not in data:
             raise Exception('params missed')
+        if data['contract'] not in ALL_CONTRACTS:
+            raise Exception('error contract')
 
         # 检测，防止重复插入
         kline = Kline.objects(ex=data['ex'], contract=data['contract'], freq=data['freq'], time=data['time']).first()
