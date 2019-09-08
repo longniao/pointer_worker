@@ -42,7 +42,7 @@ class TdAnalysor(object):
         df['td_close'] = TD_COUNT(df, column='close')
         df['td_high'] = TD_COUNT(df, column='high')
         df['td_low'] = TD_COUNT(df, column='low')
-        print(df)
+        print(df[5:])
 
 
 def do_analyze(limit=50):
