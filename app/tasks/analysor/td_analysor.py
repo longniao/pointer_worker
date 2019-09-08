@@ -42,7 +42,22 @@ class TdAnalysor(object):
         df['td_close'] = TD_COUNT(df, column='close')
         df['td_high'] = TD_COUNT(df, column='high')
         df['td_low'] = TD_COUNT(df, column='low')
-        print(df[13:])
+
+        for index, row in df[13:].iterrows():
+            data = dict(
+                ex=row['ex'].lower(),
+                contract=row['contract'].lower(),
+                freq=row['freq'],
+                time=arrow.get(row['time']).datetime,
+                td_count=row['td_count'],
+                td_high=row['td_high'],
+                td_low=row['td_low'],
+                td_close=row['td_close'],
+            )
+            # print(data)
+            TdModel.insert_data(data)
+
+        return True
 
 
 def do_analyze(limit=50):

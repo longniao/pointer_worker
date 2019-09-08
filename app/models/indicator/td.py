@@ -72,7 +72,7 @@ class Td(db.Document):
         :return:
         '''
         if contract not in ALL_CONTRACTS:
-            raise Exception('error contract')
+            raise Exception('error contract:', contract)
 
         query = Td.objects
         if ex:
@@ -122,13 +122,13 @@ class Td(db.Document):
             old_time = arrow.get(indicator.time).datetime
             if new_time == old_time:
                 update_data = dict()
-                if 'td_count' in data and data['td_count'] != indicator.open:
+                if 'td_count' in data and data['td_count'] != indicator.td_count:
                     update_data['td_count'] = data['td_count']
-                if 'td_high' in data and data['td_high'] != indicator.high:
+                if 'td_high' in data and data['td_high'] != indicator.td_high:
                     update_data['td_high'] = data['td_high']
-                if 'td_low' in data and data['td_low'] != indicator.low:
+                if 'td_low' in data and data['td_low'] != indicator.td_low:
                     update_data['td_low'] = data['td_low']
-                if 'td_close' in data and data['td_close'] != indicator.close:
+                if 'td_close' in data and data['td_close'] != indicator.td_close:
                     update_data['td_close'] = data['td_close']
                 if update_data:
                     print('indicator td update:', indicator._id, update_data)
