@@ -67,9 +67,17 @@
 
 ```
 {
+  "id":"do_analyze_init",
+  "func":"analysor.td_analysor.do_analyze",
+  "args": [99999],
+  "trigger": "date",
+  "run_date":"2019-09-08 15:33:05"
+}
+
+{
   "func":"analysor.td_analysor.do_analyze",
   "args": [50],
   "trigger": "interval",
-  "seconds": 10
+  "minutes": 1
 }
 ```
