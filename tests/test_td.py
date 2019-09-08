@@ -9,7 +9,7 @@ ts.set_token(token)
 pro = ts.pro_api()
 pro = ts.pro_api(token)
 
-df = pro.coinbar(exchange='huobi', symbol='btcusdt', freq='daily', start_date='20190101', end_date='20190901')
+df = pro.coinbar(exchange='huobi', symbol='btcusdt', freq='60min', start_date='20190821', end_date='20190908')
 # df = pro.coinlist(start_date='20180101', end_date='20181231')
 # df = pro.coinexchanges()
 # df = pro.coinbar(exchange='huobi', symbol='btcusdt', freq='60min', start_date='20190829', end_date='20190830')
@@ -17,7 +17,7 @@ df = pro.coinbar(exchange='huobi', symbol='btcusdt', freq='daily', start_date='2
 # df = pro.coincap(trade_date='20190820')
 # df = pro.btc_marketcap(start_date='20130801', end_date='20190905')
 
-df.sort_values(by="date", inplace=True)
+# df.sort_values(by="date", inplace=True)
 
 
 
