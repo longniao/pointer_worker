@@ -46,7 +46,7 @@ class Kline(db.Document):
                 "low": self.low,
                 "close": self.close,
                 "volume": self.volume,
-                "range": self.range,
+                "freq": self.freq,
                 "time": arrow.get(self.time).float_timestamp,
                 "ctime": arrow.get(self.ctime).float_timestamp,
             }
@@ -64,7 +64,7 @@ class Kline(db.Document):
         return '<Trade ex:\'%s\', contract:\'%s\'>' % (self.ex, self.contract)
 
     @staticmethod
-    def get_within(ex=None, contract=None, freq=None, start_time=None, end_time=None, limit=None, key=True):
+    def get_within(ex=None, contract=None, freq=None, start_time=None, end_time=None, limit=None, order=None, key=True):
         '''
         获取时间区间内的数据
         :param ex:
@@ -92,8 +92,10 @@ class Kline(db.Document):
         if end_time:
             end_time = arrow.get(end_time).datetime
             query = query.filter(time__lt=end_time)
+        if order:
+            query = query.order_by(order)
 
-        data_list = query.order_by("time").find()
+        data_list = query.all()
         if limit:
             data_list = data_list[:limit]
 

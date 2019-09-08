@@ -4,6 +4,9 @@ import arrow
 import pandas as pd
 from app.models.market import ALL_CONTRACTS, ALL_FREQS, ALL_EXS
 from app.models.market.kline import Kline
+from app.models.indicator.td import Td as TdModel
+from app.indicators.technology.trend import TD, TD_COUNT
+
 
 class TdAnalysor(object):
 
@@ -16,8 +19,11 @@ class TdAnalysor(object):
             for freq in ALL_FREQS:
                 for contract in ALL_CONTRACTS:
                     try:
-                        data_list = Kline.get_within(ex=ex, contract=contract, freq=freq, limit=limit)
-                        self.analyze_data(data_list)
+                        data_list = Kline.get_within(ex=ex, contract=contract, freq=freq, order='-time', limit=limit)
+                        if data_list:
+                            self.analyze_data(data_list)
+                        else:
+                            print('empty data:', ex, contract, freq)
                     except Exception as e:
                         print(e, "parse failed.")
                     except:
@@ -31,6 +37,11 @@ class TdAnalysor(object):
         '''
         print('analyze_data: start')
         df = pd.DataFrame((data_list))
+        df.sort_values(by="time", inplace=True)
+        df['td_count'] = TD(df)
+        df['td_close'] = TD_COUNT(df, column='close')
+        df['td_high'] = TD_COUNT(df, column='high')
+        df['td_low'] = TD_COUNT(df, column='low')
         print(df)
 
 

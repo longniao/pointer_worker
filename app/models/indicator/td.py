@@ -2,7 +2,7 @@
 
 import arrow
 from app import db
-from . import ALL_CONTRACTS
+from app.models.market import ALL_CONTRACTS
 
 
 class Td(db.Document):
@@ -88,7 +88,7 @@ class Td(db.Document):
             end_time = arrow.get(end_time).datetime
             query = query.filter(time__lt=end_time)
 
-        data_list = query.order_by("time").find()
+        data_list = query.order_by("time").all()
         if limit:
             data_list = data_list[:limit]
 

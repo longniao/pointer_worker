@@ -496,7 +496,7 @@ def TD_COUNT(df, shift=2, column='close'):
     :return:
     """
     df = df.copy()
-    condv = (df['vol'] > 0)
+    condv = (df['volume'] > 0)
     cond1 = (df[column] > df[column].shift(shift))
     cond2 = (df[column] < df[column].shift(shift))
 
