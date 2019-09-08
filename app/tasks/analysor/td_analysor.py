@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import arrow
-from app.model.market import ALL_CONTRACTS, ALL_FREQS, ALL_EXS
+import pandas as pd
+from app.models.market import ALL_CONTRACTS, ALL_FREQS, ALL_EXS
 from app.models.market.kline import Kline
 
 class TdAnalysor(object):
 
-    def start(self):
+    def start(self, limit=50):
         '''
         开始分析
         :return:
@@ -15,7 +16,7 @@ class TdAnalysor(object):
             for freq in ALL_FREQS:
                 for contract in ALL_CONTRACTS:
                     try:
-                        data_list = Kline.get_within(ex=ex, contract=contract, freq=freq, limit=39)
+                        data_list = Kline.get_within(ex=ex, contract=contract, freq=freq, limit=limit)
                         self.analyze_data(data_list)
                     except Exception as e:
                         print(e, "parse failed.")
@@ -29,15 +30,23 @@ class TdAnalysor(object):
         :return:
         '''
         print('analyze_data: start')
+        df = pd.DataFrame((data_list))
+        print(df)
 
 
-def do_analyze():
+def do_analyze(limit=50):
     '''
     :return:
+    {
+        "func":"analysor.td_analysor.do_analyze",
+        "args": [50],
+        "trigger": "date",
+        "run_date":"2019-09-06 15:39:40"
+    }
     '''
     try:
         analysor = TdAnalysor()
-        analysor.start()
+        analysor.start(limit)
     except Exception as e:
         print('Exception:',  str(e))
 

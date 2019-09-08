@@ -30,7 +30,7 @@ def add_job():
     func_module = importlib.import_module(func_path)
 
     job['func'] = getattr(func_module, func_method)
-    if 'id' not in job:
+    if not job['id']:
         job['id'] = full_path
     print(job)
 
