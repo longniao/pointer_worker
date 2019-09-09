@@ -51,19 +51,39 @@ curl http://127.0.0.1:5500/job_list
 ```
 {
   "func": "spider.tushare_spider.collect_kline",
-  "args": ["gateio", "btcusdt"],
-  "trigger": "interval",
-  "minutes": 1
+  "args": ["gateio", "btcusdt", "20130101", "20190909"],
+  "trigger": "date",
+  "run_date":"2019-09-08 15:33:05"
 }
+{
+  "id":"spider.tushare_spider.collect_kline.date.huobi",
+  "func": "spider.tushare_spider.collect_kline",
+  "args": ["huobi", "btcusdt", "20130101", "20190909"],
+  "trigger": "date",
+  "run_date":"2019-09-08 15:33:05"
+}
+
 
 {
   "func": "spider.tushare_spider.collect_kline",
-  "args": ['huobi', 'btcusdt'],
+  "args": ["huobi", "btcusdt"],
   "trigger":{
         "type":"cron",
         "day_of_week":"*",
         "hour":"1",
-        "minute":"1",
+        "minute":"5",
+        "second":"1"
+    }
+}
+{
+  "id":"spider.tushare_spider.collect_kline.cron.huobi",
+  "func": "spider.tushare_spider.collect_kline",
+  "args": ["huobi", "btcusdt"],
+  "trigger":{
+        "type":"cron",
+        "day_of_week":"*",
+        "hour":"1",
+        "minute":"5",
         "second":"1"
     }
 }

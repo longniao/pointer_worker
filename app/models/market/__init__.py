@@ -2,7 +2,7 @@
 
 ALL_CONTRACTS = [
     'btc_usdt',
-    'eos_usdt',
+    #'eos_usdt',
 ]
 
 ALL_FREQS = [
