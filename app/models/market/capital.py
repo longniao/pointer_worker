@@ -26,7 +26,7 @@ class Capital(db.Document):
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'collection': 'capital', 'strict': False}
+    meta = {'db_alias': 'market', 'collection': 'capital', 'strict': False}
 
     def to_json(self, key=True):
         if key:

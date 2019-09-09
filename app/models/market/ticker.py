@@ -25,7 +25,7 @@ class Ticker(db.Document):
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'db_alias': 'market', 'collection': 'ticker'}
+    meta = {'db_alias': 'market', 'db_alias': 'market', 'collection': 'ticker'}
 
     def to_json(self, key=True):
         if key:

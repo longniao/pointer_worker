@@ -34,7 +34,7 @@ class Kline(db.Document):
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'collection': 'kline', 'strict': False}
+    meta = {'db_alias': 'market', 'collection': 'kline', 'strict': False}
 
     def to_json(self, key=True):
         if key:

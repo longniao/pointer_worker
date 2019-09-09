@@ -15,7 +15,7 @@ class Job(db.Document):
     next_run_time = db.FloatField(required=True)
     job_state = db.StringField(required=True)
 
-    meta = {'collection': 'jobs', 'strict': False}
+    meta = {'db_alias': 'base', 'collection': 'jobs', 'strict': False}
 
     def to_json(self):
         return {

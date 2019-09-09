@@ -31,7 +31,7 @@ class Td(db.Document):
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'collection': 'indicator_td', 'strict': False}
+    meta = {'db_alias': 'market', 'collection': 'indicator_td', 'strict': False}
 
     def to_json(self, key=True):
         if key:

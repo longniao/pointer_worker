@@ -17,7 +17,7 @@ class Trade(db.Document):
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'db_alias': 'market', 'collection': 'trade'}
+    meta = {'db_alias': 'market', 'db_alias': 'market', 'collection': 'trade'}
 
     def to_json(self):
         if not self.type:
