@@ -50,7 +50,7 @@ class TushareClient(object):
                 ex=TUSHARE_EXCHANGE_DICT.get(exchange),
                 contract=TUSHARE_CONTRACT_DICT.get(symbol),
                 freq=TUSHARE_FREQ_DICT.get(freq),
-                time=row['date'],
+                time=arrow.get(row['date']).datetime,
                 open=row['open'],
                 high=row['high'],
                 low=row['low'],
@@ -89,7 +89,7 @@ class TushareClient(object):
                 name=row['name'],
                 marketcap=row['marketcap'],
                 vol24=row['vol24'],
-                date=row['trade_date'],
+                date=arrow.get(row['trade_date']).datetime,
             )
             print(data)
             Capital.insert_data(data)
