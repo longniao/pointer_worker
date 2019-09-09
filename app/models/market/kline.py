@@ -107,7 +107,7 @@ class Kline(db.Document):
         return result
 
     @staticmethod
-    def insert_data(data):
+    def insert_data(data, update_when_exist=True, update_fields=['open','high','low','close','volume']):
         '''
         新增数据
         :param data:
@@ -124,21 +124,26 @@ class Kline(db.Document):
         if not kline:
             return Kline(**data).save()
         else:
+            if not update_when_exist:
+                return False
+
             # 只更新当天的，过去的数据不用改变，所以不用更新
             new_time = arrow.get(data['time']).datetime
             old_time = arrow.get(kline.time).datetime
             if new_time == old_time:
                 update_data = dict()
-                if 'open' in data and data['open'] != kline.open:
+                if 'open' in data and data['open'] != kline.open and 'open' in update_fields:
                     update_data['open'] = data['open']
-                if 'high' in data and data['high'] != kline.high:
+                if 'high' in data and data['high'] != kline.high and 'high' in update_fields:
                     update_data['high'] = data['high']
-                if 'low' in data and data['low'] != kline.low:
+                if 'low' in data and data['low'] != kline.low and 'low' in update_fields:
                     update_data['low'] = data['low']
-                if 'close' in data and data['close'] != kline.close:
+                if 'close' in data and data['close'] != kline.close and 'close' in update_fields:
                     update_data['close'] = data['close']
+                if 'volume' in data and data['volume'] != kline.volume and 'volume' in update_fields:
+                    update_data['volume'] = data['volume']
                 if update_data:
-                    print('kline update:', kline._id, update_data)
+                    print('kline update:', data['ex'], data['contract'], data['freq'], data['time'], update_data)
                     update_data['utime'] = arrow.utcnow().datetime
                     Kline.objects(_id=kline._id).update_one(**update_data)
             return True

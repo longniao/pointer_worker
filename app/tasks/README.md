@@ -50,15 +50,15 @@ curl http://127.0.0.1:5500/job_list
 
 ```
 {
-  "func": "spider.tushare_spider:collect_kline",
-  "args": ['huobi', 'btc', '15min'],
+  "func": "spider.tushare_spider.collect_kline",
+  "args": ["gateio", "btcusdt"],
   "trigger": "interval",
-  "minutes": 5
+  "minutes": 1
 }
 
 {
-  "func": "spider.tushare_spider:collect_btc_marketcap",
-  "args": ['huobi', 'btc', '15min'],
+  "func": "spider.tushare_spider.collect_kline",
+  "args": ['huobi', 'btcusdt'],
   "trigger":{
         "type":"cron",
         "day_of_week":"*",
