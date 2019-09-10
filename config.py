@@ -28,7 +28,7 @@ class Config:
     JSON_AS_ASCII = True # 支持json显示中文
     SCHEDULER_API_ENABLED = parser.config['scheduler']['api_enabled']
     SCHEDULER_JOBSTORES = {
-        'default': MongoDBJobStore(client=MongoClient(parser.config['scheduler']['mongodb_uri']))
+        'default': MongoDBJobStore(database=parser.config['scheduler']['mongodb_db'], client=MongoClient(parser.config['scheduler']['mongodb_uri']))
     }
     SCHEDULER_EXECUTORS = {
         'default': ThreadPoolExecutor(20),
