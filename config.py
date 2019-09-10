@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from pymongo.mongo_client import MongoClient
 from apscheduler.jobstores.mongodb import MongoDBJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 from kits.parser.conf import ConfParser
@@ -27,7 +28,7 @@ class Config:
     JSON_AS_ASCII = True # 支持json显示中文
     SCHEDULER_API_ENABLED = parser.config['scheduler']['api_enabled']
     SCHEDULER_JOBSTORES = {
-        'default': MongoDBJobStore(**parser.config['scheduler']['jobstore_default'])
+        'default': MongoDBJobStore(client=MongoClient(parser.config['scheduler']['mongodb_uri']))
     }
     SCHEDULER_EXECUTORS = {
         'default': ThreadPoolExecutor(20),
