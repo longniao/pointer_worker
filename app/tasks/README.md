@@ -28,7 +28,7 @@ curl http://127.0.0.1:5500/job_list
 
 ```
 {
-  "func": "spider.gate_spider:collect",
+  "func": "spider.gate_spider.collect",
   "args": [],
   "trigger": "interval",
   "minutes": 5
@@ -39,7 +39,7 @@ curl http://127.0.0.1:5500/job_list
 
 ```
 {
-  "func": "spider.huobi_spider:collect",
+  "func": "spider.huobi_spider.collect",
   "args": [],
   "trigger": "interval",
   "minutes": 5
