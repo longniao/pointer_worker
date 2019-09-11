@@ -2,10 +2,10 @@
 
 import arrow
 from app import db
-from . import ALL_CONTRACTS
+from app.models.market import ALL_CONTRACTS
 
 
-class Kline(db.Document):
+class Kdj(db.Document):
     '''
     ex: str 交易所
     contract: str 交易对
@@ -22,49 +22,41 @@ class Kline(db.Document):
     _id = db.StringField()
     ex = db.StringField(required=True)
     contract = db.StringField(required=True)
-    open = db.FloatField(required=True)
-    high = db.FloatField(required=True)
-    low = db.FloatField(required=True)
-    close = db.FloatField(required=True)
-    volume = db.FloatField(required=True)
-    count = db.FloatField(required=True, default=0)
-    amount = db.FloatField(required=True, default=0)
     freq = db.StringField(required=True)
     time = db.DateTimeField(required=True)
+    kdj_k = db.FloatField(required=True)
+    kdj_d = db.FloatField(required=True)
+    kdj_j = db.FloatField(required=True)
     ctime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
     utime = db.DateTimeField(required=True, default=arrow.utcnow().datetime)
 
-    meta = {'db_alias': 'market', 'collection': 'kline', 'strict': False}
+    meta = {'db_alias': 'market', 'collection': 'indicator_kdj', 'strict': False}
 
     def to_json(self, key=True):
         if key:
             return {
                 "ex": self.ex.upper(),
                 "contract": self.contract.upper(),
-                "open": self.open,
-                "high": self.high,
-                "low": self.low,
-                "close": self.close,
-                "volume": self.volume,
                 "freq": self.freq,
+                "kdj_k": self.kdj_k,
+                "kdj_d": self.kdj_d,
+                "kdj_j": self.kdj_j,
                 "time": arrow.get(self.time).float_timestamp,
                 "ctime": arrow.get(self.ctime).float_timestamp,
             }
         else:
             return [
                 arrow.get(self.time).float_timestamp,
-                self.open,
-                self.high,
-                self.low,
-                self.close,
-                self.volume,
+                self.kdj_k,
+                self.kdj_d,
+                self.kdj_j,
             ]
 
     def __repr__(self):
-        return '<Kline ex:\'%s\', contract:\'%s\'>' % (self.ex, self.contract)
+        return '<Indicator Kdj ex:\'%s\', contract:\'%s\'>' % (self.ex, self.contract)
 
     @staticmethod
-    def get_within(ex=None, contract=None, freq=None, start_time=None, end_time=None, limit=None, order=None, key=True):
+    def get_within(ex=None, contract=None, freq=None, start_time=None, end_time=None, limit=None, key=True):
         '''
         获取时间区间内的数据
         :param ex:
@@ -77,9 +69,9 @@ class Kline(db.Document):
         :return:
         '''
         if contract not in ALL_CONTRACTS:
-            raise Exception('error contract')
+            raise Exception('error contract:', contract)
 
-        query = Kline.objects
+        query = Kdj.objects
         if ex:
             query = query.filter(ex=ex)
         if contract:
@@ -92,10 +84,8 @@ class Kline(db.Document):
         if end_time:
             end_time = arrow.get(end_time).datetime
             query = query.filter(time__lt=end_time)
-        if order:
-            query = query.order_by(order)
 
-        data_list = query.all()
+        data_list = query.order_by("time").all()
         if limit:
             data_list = data_list[:limit]
 
@@ -107,7 +97,7 @@ class Kline(db.Document):
         return result
 
     @staticmethod
-    def insert_data(data, update_when_exist=True, update_fields=['open','high','low','close','volume']):
+    def insert_data(data):
         '''
         新增数据
         :param data:
@@ -119,31 +109,24 @@ class Kline(db.Document):
             raise Exception('error contract')
 
         # 检测，防止重复插入
-        kline = Kline.objects(ex=data['ex'], contract=data['contract'], freq=data['freq'], time=data['time']).first()
+        indicator = Kdj.objects(ex=data['ex'], contract=data['contract'], freq=data['freq'], time=data['time']).first()
 
-        if not kline:
-            return Kline(**data).save()
+        if not indicator:
+            return Kdj(**data).save()
         else:
-            if not update_when_exist:
-                return False
-
             # 只更新当天的，过去的数据不用改变，所以不用更新
             new_time = arrow.get(data['time']).datetime
-            old_time = arrow.get(kline.time).datetime
+            old_time = arrow.get(indicator.time).datetime
             if new_time == old_time:
                 update_data = dict()
-                if 'open' in data and data['open'] != kline.open and 'open' in update_fields:
-                    update_data['open'] = data['open']
-                if 'high' in data and data['high'] != kline.high and 'high' in update_fields:
-                    update_data['high'] = data['high']
-                if 'low' in data and data['low'] != kline.low and 'low' in update_fields:
-                    update_data['low'] = data['low']
-                if 'close' in data and data['close'] != kline.close and 'close' in update_fields:
-                    update_data['close'] = data['close']
-                if 'volume' in data and data['volume'] != kline.volume and 'volume' in update_fields:
-                    update_data['volume'] = data['volume']
+                if 'kdj_k' in data and data['kdj_k'] != indicator.td_count:
+                    update_data['kdj_k'] = data['kdj_k']
+                if 'kdj_d' in data and data['kdj_d'] != indicator.td_high:
+                    update_data['kdj_d'] = data['kdj_d']
+                if 'kdj_j' in data and data['kdj_j'] != indicator.td_low:
+                    update_data['kdj_j'] = data['kdj_j']
                 if update_data:
-                    print('kline update:', data['ex'], data['contract'], data['freq'], data['time'], update_data)
+                    print('indicator kdj update:', indicator._id, update_data)
                     update_data['utime'] = arrow.utcnow().datetime
-                    Kline.objects(_id=kline._id).update_one(**update_data)
+                    Kdj.objects(_id=indicator._id).update_one(**update_data)
             return True
