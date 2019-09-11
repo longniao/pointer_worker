@@ -115,4 +115,11 @@ curl http://127.0.0.1:5500/job_list
   "trigger": "interval",
   "minutes": 1
 }
+
+{
+  "func":"analysor.rsi_analysor.do_analyze",
+  "args": [50],
+  "trigger": "interval",
+  "minutes": 1
+}
 ```

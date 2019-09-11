@@ -4,11 +4,11 @@ import arrow
 import pandas as pd
 from app.models.market import ALL_CONTRACTS, ALL_FREQS, ALL_EXS
 from app.models.market.kline import Kline
-from app.models.indicator.kdj import Kdj as KdjModel
-from app.indicators.technology.countertrend import KDJ
+from app.models.indicator.rsi import Rsi as RsiModel
+from app.indicators.talib import RSI
 
 
-class KdjAnalysor(object):
+class RsiAnalysor(object):
 
     def start(self, limit=50):
         '''
@@ -35,25 +35,22 @@ class KdjAnalysor(object):
         :param data_list:
         :return:
         '''
-        print('kdj analyze: start')
+        print('rsi analyze: start')
         df = pd.DataFrame((data_list))
         df.sort_values(by="time", inplace=True)
-        df_kdj = KDJ(df)
-        df = pd.concat([df, df_kdj], axis=1)
+        df['rsi'] = RSI(df)
         # print(df)
         for index, row in df.iterrows():
-            if 'KDJ_D' in row and row['KDJ_D']:
+            if 'rsi' in row and row['rsi']:
                 data = dict(
                     ex=row['ex'].lower(),
                     contract=row['contract'].lower(),
                     freq=row['freq'],
                     time=arrow.get(row['time']).datetime,
-                    kdj_k=row['KDJ_K'],
-                    kdj_d=row['KDJ_D'],
-                    kdj_j=row['KDJ_J'],
+                    rsi=row['rsi'],
                 )
                 # print(data)
-                KdjModel.insert_data(data)
+                RsiModel.insert_data(data)
 
         return True
 
@@ -69,7 +66,7 @@ def do_analyze(limit=50):
     }
     '''
     try:
-        analysor = KdjAnalysor()
+        analysor = RsiAnalysor()
         analysor.start(limit)
     except Exception as e:
         print('Exception:',  str(e))

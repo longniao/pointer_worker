@@ -35,7 +35,7 @@ class TdAnalysor(object):
         :param data_list:
         :return:
         '''
-        print('analyze_data: start')
+        print('td analyze: start')
         df = pd.DataFrame((data_list))
         df.sort_values(by="time", inplace=True)
         df['td_count'] = TD(df)
