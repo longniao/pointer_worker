@@ -40,19 +40,20 @@ class KdjAnalysor(object):
         df.sort_values(by="time", inplace=True)
         df_kdj = KDJ(df)
         df = pd.concat([df, df_kdj], axis=1)
-
-        for index, row in df[13:].iterrows():
-            data = dict(
-                ex=row['ex'].lower(),
-                contract=row['contract'].lower(),
-                freq=row['freq'],
-                time=arrow.get(row['time']).datetime,
-                kdj_k=row['kdj_k'],
-                kdj_d=row['KDJ_D'],
-                kdj_j=row['kdj_j'],
-            )
-            # print(data)
-            KdjModel.insert_data(data)
+        # print(df)
+        for index, row in df.iterrows():
+            if 'KDJ_D' in row and row['KDJ_D']:
+                data = dict(
+                    ex=row['ex'].lower(),
+                    contract=row['contract'].lower(),
+                    freq=row['freq'],
+                    time=arrow.get(row['time']).datetime,
+                    kdj_k=row['KDJ_K'],
+                    kdj_d=row['KDJ_D'],
+                    kdj_j=row['KDJ_J'],
+                )
+                # print(data)
+                KdjModel.insert_data(data)
 
         return True
 
