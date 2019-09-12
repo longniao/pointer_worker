@@ -119,11 +119,11 @@ class Kdj(db.Document):
             old_time = arrow.get(indicator.time).datetime
             if new_time == old_time:
                 update_data = dict()
-                if 'kdj_k' in data and data['kdj_k'] != indicator.td_count:
+                if 'kdj_k' in data and data['kdj_k'] != indicator.kdj_k:
                     update_data['kdj_k'] = data['kdj_k']
-                if 'kdj_d' in data and data['kdj_d'] != indicator.td_high:
+                if 'kdj_d' in data and data['kdj_d'] != indicator.kdj_d:
                     update_data['kdj_d'] = data['kdj_d']
-                if 'kdj_j' in data and data['kdj_j'] != indicator.td_low:
+                if 'kdj_j' in data and data['kdj_j'] != indicator.kdj_j:
                     update_data['kdj_j'] = data['kdj_j']
                 if update_data:
                     print('indicator kdj update:', indicator._id, update_data)
