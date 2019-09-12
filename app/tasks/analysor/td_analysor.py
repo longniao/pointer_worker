@@ -43,6 +43,9 @@ class TdAnalysor(object):
         df['td_high'] = TD_COUNT(df, column='high')
         df['td_low'] = TD_COUNT(df, column='low')
 
+        # 删除空数据行
+        df = df.dropna(axis=0, how='any')
+
         for index, row in df[13:].iterrows():
             data = dict(
                 ex=row['ex'].lower(),

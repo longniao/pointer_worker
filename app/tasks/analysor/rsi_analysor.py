@@ -39,6 +39,9 @@ class RsiAnalysor(object):
         df = pd.DataFrame((data_list))
         df.sort_values(by="time", inplace=True)
         df['rsi'] = RSI(df)
+        # 删除空数据行
+        df = df.dropna(axis=0, how='any')
+
         # print(df)
         for index, row in df.iterrows():
             if 'rsi' in row and row['rsi']:

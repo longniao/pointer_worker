@@ -3,6 +3,7 @@
 import sys
 sys.path.append('..')
 
+import arrow
 import tushare as ts
 import pandas as pd
 from app.indicators.expert import KDJZJ
@@ -30,6 +31,21 @@ print(df_kdj)
 
 df = pd.concat([df,df_kdj], axis=1)
 print(df)
+
+df = df.dropna(axis=0,how='any')
+
+for index, row in df.iterrows():
+    if 'KDJ_D' in row and row['KDJ_D']:
+        data = dict(
+            ex='',
+            contract='',
+            freq='',
+            time=arrow.get(row['date']).datetime,
+            kdj_k=row['KDJ_K'],
+            kdj_d=row['KDJ_D'],
+            kdj_j=row['KDJ_J'],
+        )
+        print(data)
 
 if __name__ == '__main__':
     try:

@@ -40,6 +40,8 @@ class KdjAnalysor(object):
         df.sort_values(by="time", inplace=True)
         df_kdj = KDJ(df)
         df = pd.concat([df, df_kdj], axis=1)
+        # 删除空数据行
+        df = df.dropna(axis=0, how='any')
         # print(df)
         for index, row in df.iterrows():
             if 'KDJ_D' in row and row['KDJ_D']:
