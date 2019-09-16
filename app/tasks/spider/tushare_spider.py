@@ -50,7 +50,7 @@ class TushareClient(object):
                 ex=TUSHARE_EXCHANGE_DICT.get(exchange),
                 contract=TUSHARE_CONTRACT_DICT.get(symbol),
                 freq=TUSHARE_FREQ_DICT.get(freq),
-                time=arrow.get(row['date']).datetime,
+                time=arrow.get(row['date'], tzinfo='Asia/Shanghai').datetime,
                 open=row['open'],
                 high=row['high'],
                 low=row['low'],
@@ -134,7 +134,7 @@ def collect_btc_marketcap(start_date=None, end_date=None):
 
 if __name__ == '__main__':
     try:
-        collect()
+        collect_kline()
     except KeyboardInterrupt:
         print('KeyboardInterrupt')
 

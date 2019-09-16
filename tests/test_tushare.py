@@ -24,7 +24,7 @@ TUSHARE_FREQ_DICT = {
     'week': '7d',
 }
 
-df = pro.coinbar(exchange='huobi', symbol='btcusdt', freq='daily', start_date='20180101', end_date='20190909')
+df = pro.coinbar(exchange='huobi', symbol='btcusdt', freq='15min', start_date='20190905', end_date='20190909')
 # df = pro.coinlist(start_date='20180101', end_date='20181231')
 # df = pro.coinexchanges()
 # df = pro.coinbar(exchange='huobi', symbol='btcusdt', freq='60min', start_date='20190829', end_date='20190830')
@@ -46,7 +46,7 @@ for index, row in df.iterrows():
         close=row['close'],
         volume=row['vol'],
     )
-    #print(data)
+    print(data)
 
 
 if __name__ == '__main__':
