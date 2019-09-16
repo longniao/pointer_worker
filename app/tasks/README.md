@@ -4,6 +4,10 @@
 curl -XPOST  http://127.0.0.1:5500/add_job -H 'Content-Type: application/json' -d '{ "func":"spider.feixiaohao_spider.collect", "args":[], "trigger":{ "type": "cron", "day_of_week": "*", "hour": "1", "minute": "1", "second": "1" }}'
 
 curl http://127.0.0.1:5500/job_list
+
+curl http://127.0.0.1:5500/remove_job -H 'Content-Type: application/json' -d '{ "id":"spider.tushare_spider.collect_kline.gateio" }'
+curl http://127.0.0.1:5500/remove_job -H 'Content-Type: application/json' -d '{ "id":"app.tasks.spider.huobi_spider.collect" }'
+
 ```
 
 ## spider 数据采集
