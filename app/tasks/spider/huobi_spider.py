@@ -4,6 +4,7 @@ import arrow
 from ws4py.client.threadedclient import WebSocketClient
 from app.libs.util import decode_ws_payload
 from app.models.market.kline import Kline
+from . import DEFAULT_TIMEZONE
 
 client_id = '12312'
 
@@ -106,7 +107,7 @@ class HuobiClient(WebSocketClient):
                 ex='huobi',
                 contract=contract,
                 freq=freq,
-                time=arrow.get(row['id']).datetime,
+                time=arrow.get(row['id']).to(DEFAULT_TIMEZONE).datetime,
                 open=row['open'],
                 high=row['high'],
                 low=row['low'],
