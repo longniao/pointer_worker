@@ -89,7 +89,7 @@ class TushareClient(object):
                 name=row['name'],
                 marketcap=row['marketcap'],
                 vol24=row['vol24'],
-                date=arrow.get(row['trade_date']).datetime,
+                date=arrow.get(row['trade_date'], tzinfo='Asia/Shanghai').datetime,
             )
             print(data)
             Capital.insert_data(data)

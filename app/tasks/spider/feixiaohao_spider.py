@@ -49,7 +49,7 @@ class FeixiaohaoClient(object):
                     ex='feixiaohao',
                     contract='btc_usdt',
                     freq='1d',
-                    time=arrow.get(row['tickertime']).datetime,
+                    time=arrow.get(row['tickertime'], tzinfo='Asia/Shanghai').datetime,
                     open=row['openprice'],
                     high=row['high'],
                     low=row['low'],

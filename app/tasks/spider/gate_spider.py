@@ -5,7 +5,6 @@ import arrow
 from ws4py.client.threadedclient import WebSocketClient
 from app.libs.util import decode_ws_payload
 from app.models.market.kline import Kline
-from . import DEFAULT_TIMEZONE
 
 GATE_CONTRACT_DICT = {
     'BTC_USD': 'btc_usdt',
@@ -70,7 +69,7 @@ class GateClient(WebSocketClient):
                             ex='gate',
                             contract=contract,
                             freq=freq,
-                            time=arrow.get(row['t']).to(DEFAULT_TIMEZONE).datetime,
+                            time=arrow.get(row['t']).datetime,
                             open=row['o'],
                             high=row['h'],
                             low=row['l'],
